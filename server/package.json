@@ -1,0 +1,28 @@
+{
+  "name": "ckb-oracle-bridge",
+  "version": "0.1.0",
+  "description": "CKB Oracle Bridge Server",
+  "main": "index.js",
+  "author": "Dylan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/duanyytop/ckb-oracle-bridge/issues"
+  },
+  "homepage": "https://github.com/duanyytop/ckb-oracle-bridge#readme",
+  "dependencies": {
+    "koa": "^2.13.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^9.1.0",
+    "node": "^14.5.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint ./**/*.js --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    }
+  }
+}
