@@ -1,0 +1,23 @@
+{
+  "name": "ckb-oracle-bridge",
+  "version": "0.1.0",
+  "description": "CKB Oracle Bridge",
+  "author": "Dylan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/duanyytop/ckb-oracle-bridge/issues"
+  },
+  "homepage": "https://github.com/duanyytop/ckb-oracle-bridge#readme",
+  "scripts": {
+    "lint": "cd client && yarn lint && cd ../server && yarn lint",
+    "test": "cd client && yarn test && cd ../server && yarn test"
+  },
+  "devDependencies": {
+    "husky": "4.2.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    }
+  }
+}
