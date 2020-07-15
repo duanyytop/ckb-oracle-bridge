@@ -1,0 +1,23 @@
+[
+  {
+    "name": "BTC/USDT",
+    "price": 9600,
+    "increase": "10%",
+    "node": "ChainLink",
+    "timestamp": 1594798464
+  },
+  {
+    "name": "ETH/USDT",
+    "price": 240,
+    "increase": "10%",
+    "node": "ChainLink",
+    "timestamp": 1594798464
+  },
+  {
+    "name": "CKB/USDT",
+    "price": 0.05,
+    "increase": "10%",
+    "node": "ChainLink",
+    "timestamp": 1594798464
+  }
+]
