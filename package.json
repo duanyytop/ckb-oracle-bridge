@@ -9,7 +9,7 @@
   },
   "homepage": "https://github.com/duanyytop/ckb-oracle-bridge#readme",
   "scripts": {
-    "lint": "cd client && yarn lint && cd ../server && yarn lint",
+    "lint": "cd client && yarn lint",
     "test": "cd client && yarn test && cd ../server && yarn test",
     "build:client": "cd client && yarn build"
   },
