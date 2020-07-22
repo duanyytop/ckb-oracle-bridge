@@ -1,3 +1,7 @@
+/**
+ * The generator is an example which send ETH/USD contact and token information to Nervos CKB Aggron Testnet.
+ */
+
 require("dotenv/config");
 const CKB = require("@nervosnetwork/ckb-sdk-core").default;
 const {Indexer, CellCollector} = require("@ckb-lumos/indexer");
@@ -41,7 +45,7 @@ const collectCells = async ({codeHash, hashType, args}) => {
 // Ethereum transaction data is from https://etherscan.io/tx/0x7992e06b4c34c4a6022f5576e98496c3c3ac14b8727c7a8fd859bb774f34b8e1
 const oracleData = () => {
   const price = intToU256(23372000000);
-  const timestamp = intToU256(1594955120);
+  const timestamp = intToU256(1595409980);
   const sender = "501698a6f6f762c79e4d28e3815c135e3f9af996";
   const nonce = intToU64(147068);
   const gasPrice = intToU64(43000000000);
