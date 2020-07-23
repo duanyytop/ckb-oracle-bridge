@@ -1,18 +1,11 @@
 require("dotenv/config");
-const CKB = require("@nervosnetwork/ckb-sdk-core").default;
 const {Indexer, TransactionCollector} = require("@ckb-lumos/indexer");
 const {uintHexToInt, getTokenByContract} = require("../utils");
-const {setTokenInfo, getTokenInfo} = require("../database");
+const {putTokenInfo, getTokenInfoList} = require("../database");
+const {ckb, ARGS} = require("../utils/config");
 
 const indexer = new Indexer("http://127.0.0.1:8114", "./indexed-data");
 indexer.startForever();
-
-const CKB_URL = process.env.CKB_URL || "http://127.0.0.1:8114";
-const ckb = new CKB(CKB_URL);
-
-const PRI_KEY = process.env.PRI_KEY || "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"; // private key for demo, don't expose it in production
-const PUB_KEY = ckb.utils.privateKeyToPublicKey(PRI_KEY);
-const ARGS = "0x" + ckb.utils.blake160(PUB_KEY, "hex");
 
 const collectTransactions = async ({codeHash, hashType, args}) => {
   const collector = new TransactionCollector(indexer, {
@@ -29,30 +22,58 @@ const collectTransactions = async ({codeHash, hashType, args}) => {
   return transactions;
 };
 
+const lockScript = () => {
+  return {
+    codeHash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
+    hashType: "type",
+    args: ARGS
+  };
+};
+
+const SENDER_INDEX = 128;
 const parseAndStoreOracleData = async () => {
   const blockNumber = (await indexer.tip()).block_number;
   const tipNumber = await ckb.rpc.getTipBlockNumber();
-  if (blockNumber === tipNumber) {
-    const transactions = await collectTransactions({
-      codeHash: "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
-      hashType: "type",
-      args: ARGS
-    });
+  if (blockNumber !== tipNumber) {
+    setTimeout(async () => {
+      await parseAndStoreOracleData();
+    }, 1000);
+  } else {
+    const transactions = await collectTransactions(lockScript());
     for (let transaction of transactions) {
       for (let data of transaction.transaction.outputs_data) {
-        if (data === "0x") {
-          break;
-        }
-        const payload = data.substring(data.startsWith("0x") ? 234 : 232);
+        if (data === "0x") break;
+        const block = await ckb.rpc.getBlock(transaction.tx_status.block_hash);
+        const dataHex = data.startsWith("0x") ? data.substring(2) : data;
+        const sender = dataHex.substring(SENDER_INDEX, SENDER_INDEX + 40);
+        const txHash = dataHex.substring(SENDER_INDEX + 40, SENDER_INDEX + 104);
+        const nonce = uintHexToInt(dataHex.substring(SENDER_INDEX + 104, SENDER_INDEX + 120));
+        const gasPrice = uintHexToInt(dataHex.substring(SENDER_INDEX + 120, SENDER_INDEX + 136));
+        const gasLimit = uintHexToInt(dataHex.substring(SENDER_INDEX + 136, SENDER_INDEX + 152));
+        const amount = uintHexToInt(dataHex.substring(SENDER_INDEX + 152, SENDER_INDEX + 168));
+        const payload = dataHex.substring(SENDER_INDEX + 168);
         const contract = payload.substring(160, 200);
         const timestamp = uintHexToInt(payload.substring(264, 328));
         const price = uintHexToInt(payload.substring(328));
-
-        await setTokenInfo({
+        await putTokenInfo({
           contract,
           token: getTokenByContract(contract),
           price,
-          timestamp
+          timestamp,
+          source: {
+            sender,
+            tx_hash: txHash,
+            nonce,
+            gas_price: gasPrice,
+            gas_limit: gasLimit,
+            amount,
+            timestamp
+          },
+          destination: {
+            tx_hash: transaction.transaction.hash,
+            block_number: block.header.number,
+            timestamp: block.header.timestamp
+          }
         });
       }
     }
@@ -62,12 +83,12 @@ const parseAndStoreOracleData = async () => {
 const runCKBOracle = async () => {
   setInterval(async () => {
     await parseAndStoreOracleData();
-    setTimeout(() => {
-      getTokenInfo("f79d6afbb6da890132f9d7c355e3015f15f3406f6", tokenInfo => {
-        console.log(JSON.stringify(tokenInfo));
-      });
-    }, 3000);
   }, 1000);
 };
 
-runCKBOracle();
+process.on("message", async msg => {
+  const {start} = msg;
+  if (start) {
+    await runCKBOracle();
+  }
+});

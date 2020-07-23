@@ -5,7 +5,7 @@ const detail = require("../controller/detail");
 
 router
   .get("/prices", list)
-  .get("/history/:name", history)
-  .get("/prices/:name", detail);
+  .get("/history/:contract", history)
+  .get("/prices/:contract", detail);
 
 module.exports = router;
