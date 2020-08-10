@@ -13,11 +13,11 @@
 
 <script>
 export default {
-  name: "PriceItem",
+  name: 'PriceItem',
   props: {
-    msg: String
-  }
-};
+    msg: String,
+  },
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -58,7 +58,12 @@ module.exports = {
       },
     ],
     'no-plusplus': [0],
-    'no-console': ['error', { allow: ['error'] }],
+    'no-console': [
+      'error',
+      {
+        allow: ['error'],
+      },
+    ],
   },
   overrides: [
     {
