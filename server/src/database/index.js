@@ -29,7 +29,6 @@ const getTokenInfo = async (contract, timestamp) => {
   if (!db) {
     db = createDB();
   }
-  console.log((await db.get(`${contract}:${timestamp}`)).toString("utf8"));
   try {
     return (await db.get(`${contract}:${timestamp}`)).toString("utf8");
   } catch (error) {
