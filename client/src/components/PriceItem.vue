@@ -1,7 +1,14 @@
 <template>
-  <div class="price-item">
-    <h1>{{ msg }}</h1>
-  </div>
+  <md-list-item>
+    <md-avatar>
+      <img src="https://placeimg.com/40/40/people/1" alt="People" />
+    </md-avatar>
+    <div class="md-list-item-text">
+      <span>{{ msg }}</span>
+      <span>Brunch this weekend?</span>
+      <p>I'll be in your neighborhood doing errands this week. Do you want to meet?</p>
+    </div>
+  </md-list-item>
 </template>
 
 <script>

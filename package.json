@@ -14,11 +14,15 @@
     "build:client": "cd client && yarn build"
   },
   "devDependencies": {
-    "husky": "4.2.5"
+    "husky": "4.2.5",
+    "prettier": "^2.0.5"
   },
   "husky": {
     "hooks": {
       "pre-commit": "yarn lint"
     }
+  },
+  "dependencies": {
+    "vue-material": "^1.0.0-beta-14"
   }
 }
