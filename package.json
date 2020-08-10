@@ -22,7 +22,5 @@
       "pre-commit": "yarn lint"
     }
   },
-  "dependencies": {
-    "vue-material": "^1.0.0-beta-14"
-  }
+  "dependencies": {}
 }

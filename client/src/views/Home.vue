@@ -1,18 +1,32 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/ckb_logo.png" />
-    <PriceItem msg="CKB Oracle Bridge Price" />
+    <div class="list">
+      <div v-for="tokenInfo in tokenInfoList" :key="tokenInfo.token">
+        <TokenPrice :tokenInfo="tokenInfo" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import PriceItem from '@/components/PriceItem.vue'
+import TokenPrice from '@/components/TokenPrice.vue'
+import { TokenInfoData } from '../mock/prices'
 
 export default {
   name: 'Home',
   components: {
-    PriceItem,
+    TokenPrice,
+  },
+  data: function() {
+    return {
+      tokenInfoList: TokenInfoData,
+    }
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.list {
+  margin-top: 30px;
+}
+</style>

@@ -1,10 +1,10 @@
 import { shallowMount } from '@vue/test-utils'
-import PriceItem from '@/components/PriceItem.vue'
+import TokenPrice from '@/components/TokenPrice.vue'
 
-describe('PriceItem.vue', () => {
+describe('TokenPrice.vue', () => {
   it('renders props.msg when passed', () => {
     const msg = 'new message'
-    const wrapper = shallowMount(PriceItem, {
+    const wrapper = shallowMount(TokenPrice, {
       propsData: {
         msg,
       },
