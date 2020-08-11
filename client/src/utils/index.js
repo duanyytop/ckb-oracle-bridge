@@ -9,6 +9,12 @@ const parseTime = timestamp => {
   )}:${formatData(date.getMinutes())}:${formatData(date.getSeconds())}`
 }
 
+const parseDate = timestamp => {
+  const date = new Date(Number(timestamp))
+  return `${date.getFullYear()}/${formatData(date.getMonth() + 1)}/${formatData(date.getDate())}`
+}
+
 module.exports = {
   parseTime,
+  parseDate,
 }

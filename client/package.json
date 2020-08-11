@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "echarts": "^4.8.0",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
+    "v-charts": "^1.19.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0"
   },

@@ -28,28 +28,28 @@ const TokenInfoData = [
 const HistoryPriceData = [
   {
     token: 'BTC/USDT',
-    price: '11979.80',
-    timestamp: '1597093527000',
+    price: '10979.80',
+    timestamp: '1596795784000',
   },
   {
     token: 'BTC/USDT',
     price: '12045.80',
-    timestamp: '1597103527000',
+    timestamp: '1596882184000',
   },
   {
     token: 'BTC/USDT',
-    price: '11709.47',
-    timestamp: '1597123527000',
+    price: '11309.47',
+    timestamp: '1596968584000',
   },
   {
     token: 'BTC/USDT',
     price: '11589.47',
-    timestamp: '1597143527000',
+    timestamp: '1597054984000',
   },
   {
     token: 'BTC/USDT',
-    price: '11909.47',
-    timestamp: '1597193527000',
+    price: '13009.47',
+    timestamp: '1597141384000',
   },
 ]
 
