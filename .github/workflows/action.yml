@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install dependence
-        run: yarn install
+        run: yarn bootstrap
       - name: Run a multi-line script
         run: |
           yarn build:client

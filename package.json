@@ -9,6 +9,7 @@
   },
   "homepage": "https://github.com/duanyytop/ckb-oracle-bridge#readme",
   "scripts": {
+    "bootstrap": "yarn install && cd client && yarn install && cd ../server && yarn install",
     "lint": "cd client && yarn lint",
     "test": "cd client && yarn test && cd ../server && yarn test",
     "build:client": "cd client && yarn build"
@@ -19,7 +20,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint"
+      "pre-commit": "yarn lint && yarn test"
     }
   },
   "dependencies": {}
