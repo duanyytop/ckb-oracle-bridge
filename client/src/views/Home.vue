@@ -10,7 +10,7 @@
 
 <script>
 import TokenPrice from '@/components/TokenPrice.vue'
-import { TokenInfoData } from '../mock/prices'
+import { TokenInfoData } from '../mock/index'
 
 export default {
   name: 'Home',

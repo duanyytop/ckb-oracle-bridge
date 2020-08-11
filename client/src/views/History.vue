@@ -2,7 +2,7 @@
   <div class="history">
     <h2>{{ token }}</h2>
     <div class="list">
-      <div v-for="historyPrice in historyPriceList" :key="historyPrice.timestamp">
+      <div v-for="historyPrice in historyPriceList" :key="historyPrice.price">
         <HistoryPrice :historyPrice="historyPrice" />
       </div>
     </div>
@@ -11,7 +11,7 @@
 
 <script>
 import HistoryPrice from '@/components/HistoryPrice.vue'
-import { HistoryPriceData } from '../mock/prices'
+import { HistoryPriceData } from '../mock/index'
 
 export default {
   name: 'History',

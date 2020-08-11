@@ -11,7 +11,7 @@ const routes = [
     component: Home,
   },
   {
-    path: '/detail/:token',
+    path: '/detail/:token/:timestamp',
     name: 'Detail',
     component: () => import('../views/Detail.vue'),
     props: true,

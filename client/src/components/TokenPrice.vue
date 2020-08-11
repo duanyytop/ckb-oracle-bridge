@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="item">
+    <div class="item" @click.prevent="handleClick()">
       <div class="left">
         <img v-bind:src="require('../assets/' + tokenInfo.icon)" :alt="tokenInfo.token" />
         <div class="token">
@@ -24,6 +24,12 @@
 export default {
   name: 'TokenPrice',
   props: ['tokenInfo'],
+  methods: {
+    handleClick: function() {
+      const token = this.tokenInfo.token.toLowerCase().replace('/', '-')
+      this.$router.push(`/history/${token}`)
+    },
+  },
 }
 </script>
 

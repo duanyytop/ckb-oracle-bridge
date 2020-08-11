@@ -11,7 +11,7 @@ module.exports = {
     'prettier/prettier': [
       2,
       {
-        printWidth: 120,
+        printWidth: 130,
       },
     ],
     semi: [2, 'never'],
@@ -62,6 +62,14 @@ module.exports = {
       'error',
       {
         allow: ['error'],
+      },
+    ],
+    'space-before-function-paren': [
+      'error',
+      {
+        anonymous: 'ignore',
+        named: 'always',
+        asyncArrow: 'always',
       },
     ],
   },
