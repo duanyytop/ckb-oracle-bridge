@@ -1,5 +1,34 @@
 <template>
-  <div class="hidtory">
-    <h1>This is a history page</h1>
+  <div class="history">
+    <h2>{{ token }}</h2>
+    <div class="list">
+      <div v-for="historyPrice in historyPriceList" :key="historyPrice.price">
+        <HistoryPrice :historyPrice="historyPrice" />
+      </div>
+    </div>
   </div>
 </template>
+
+<script>
+import HistoryPrice from '@/components/HistoryPrice.vue'
+import { HistoryPriceData } from '../mock/index'
+
+export default {
+  name: 'History',
+  props: ['token'],
+  components: {
+    HistoryPrice,
+  },
+  data: function() {
+    return {
+      historyPriceList: HistoryPriceData,
+    }
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+.list {
+  margin-top: 30px;
+}
+</style>
