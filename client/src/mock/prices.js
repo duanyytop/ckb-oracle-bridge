@@ -25,6 +25,35 @@ const TokenInfoData = [
   },
 ]
 
+const HistoryPriceData = [
+  {
+    token: 'BTC/USDT',
+    price: '11979.80',
+    timestamp: '3min ago',
+  },
+  {
+    token: 'BTC/USDT',
+    price: '12045.80',
+    timestamp: '3min ago',
+  },
+  {
+    token: 'BTC/USDT',
+    price: '11709.47',
+    timestamp: '3min ago',
+  },
+  {
+    token: 'BTC/USDT',
+    price: '11589.47',
+    timestamp: '3min ago',
+  },
+  {
+    token: 'BTC/USDT',
+    price: '11909.47',
+    timestamp: '3min ago',
+  },
+]
+
 module.exports = {
   TokenInfoData,
+  HistoryPriceData,
 }

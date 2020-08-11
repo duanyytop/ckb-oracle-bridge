@@ -11,14 +11,16 @@ const routes = [
     component: Home,
   },
   {
-    path: '/detail',
+    path: '/detail/:token',
     name: 'Detail',
     component: () => import('../views/Detail.vue'),
+    props: true,
   },
   {
-    path: '/history',
+    path: '/history/:token',
     name: 'History',
     component: () => import('../views/History.vue'),
+    props: true,
   },
 ]
 
