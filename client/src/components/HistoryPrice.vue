@@ -48,6 +48,7 @@ export default {
 
   div:last-child {
     font-size: 14px;
+    color: black;
   }
 }
 

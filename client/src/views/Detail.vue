@@ -1,10 +1,11 @@
 <template>
   <div class="detail">
-    <div class="title">Source</div>
+    <div class="title">{{ parseToken(token) }}</div>
+    <div class="sub">Source</div>
     <div v-for="item in detail.source" :key="'source' + item.label.trim()">
       <DetailItem :item="item" />
     </div>
-    <div class="title">Destination</div>
+    <div class="sub">Destination</div>
     <div v-for="item in detail.destination" :key="'destination' + item.label.trim()">
       <DetailItem :item="item" />
     </div>
@@ -14,7 +15,7 @@
 <script>
 import DetailItem from '@/components/DetailItem.vue'
 import { TokenDetailData } from '../mock/index'
-import { parseTime } from '../utils/index'
+import { parseTime, parseToUpperCase } from '../utils/index'
 
 export default {
   name: 'History',
@@ -83,6 +84,9 @@ export default {
     ckbBlockLink: function(block) {
       return `https://explorer.nervos.org/block/${block}`
     },
+    parseToken: function() {
+      return parseToUpperCase(this.token)
+    },
   },
 }
 </script>
@@ -92,10 +96,23 @@ export default {
   padding: 8px 16px;
 
   .title {
+    width: 100%;
+    text-align: center;
     font-size: 24px;
     color: black;
     font-weight: 600;
-    margin-top: 16px;
+    padding-top: 16px;
+  }
+
+  .sub {
+    font-size: 24px;
+    color: white;
+    font-weight: 600;
+    margin-top: 24px;
+    background: red;
+    padding-left: 8px;
+    height: 40px;
+    line-height: 40px;
   }
 }
 </style>

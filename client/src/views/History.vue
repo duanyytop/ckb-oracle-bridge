@@ -1,6 +1,14 @@
 <template>
   <div class="history">
-    <ve-line :data="chartData" :legend-visible="false" :grid="{ top: '12%', bottom: '3%' }" height="300px"></ve-line>
+    <div class="title">{{ parseToken(token) }}</div>
+    <ve-line
+      :data="chartData"
+      :legend-visible="false"
+      :grid="{ top: '10%', bottom: '10%' }"
+      :yAxis="{ scale: 'true' }"
+      :colors="['#ff0000']"
+      height="280px"
+    ></ve-line>
     <div class="list">
       <div v-for="historyPrice in historyPriceList" :key="historyPrice.price">
         <HistoryPrice :historyPrice="historyPrice" />
@@ -12,7 +20,7 @@
 <script>
 import HistoryPrice from '@/components/HistoryPrice.vue'
 import { HistoryPriceData } from '../mock/index'
-import { parseDate } from '../utils/index'
+import { parseDate, parseToUpperCase } from '../utils/index'
 
 export default {
   name: 'History',
@@ -34,11 +42,21 @@ export default {
       },
     }
   },
+  methods: {
+    parseToken: function() {
+      return parseToUpperCase(this.token)
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-.list {
-  margin-top: 30px;
+.title {
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  color: black;
+  font-weight: 600;
+  padding-top: 16px;
 }
 </style>

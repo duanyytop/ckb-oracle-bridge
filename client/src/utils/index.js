@@ -14,7 +14,17 @@ const parseDate = timestamp => {
   return `${date.getFullYear()}/${formatData(date.getMonth() + 1)}/${formatData(date.getDate())}`
 }
 
+const parseToLowerCase = value => {
+  return value.toLowerCase().replace('/', '-')
+}
+
+const parseToUpperCase = value => {
+  return value.toUpperCase().replace('-', '/')
+}
+
 module.exports = {
   parseTime,
   parseDate,
+  parseToLowerCase,
+  parseToUpperCase,
 }

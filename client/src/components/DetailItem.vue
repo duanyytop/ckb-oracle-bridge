@@ -27,10 +27,11 @@ export default {
   div:first-child {
     font-size: 16px;
     color: #333333;
+    font-weight: 600;
   }
 
   .value {
-    font-size: 14px;
+    font-size: 16px;
     color: black;
     word-wrap: break-word;
   }
@@ -39,6 +40,7 @@ export default {
     color: blue !important;
     font-family: monospace;
     text-decoration: none;
+    font-size: 16px;
   }
 }
 </style>
