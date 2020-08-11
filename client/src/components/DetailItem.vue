@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <div>{{ item.label }}:</div>
-    <a class="value" v-if="item.link" :href="item.link">{{ item.value }}</a>
+    <a class="value" v-if="item.link" :href="item.link" target="_blank">{{ item.value }}</a>
     <div class="value" v-else>{{ item.value }}</div>
   </div>
 </template>
