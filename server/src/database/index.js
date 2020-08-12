@@ -11,13 +11,13 @@ const putTokenInfo = async tokenInfo => {
   if (!db) {
     db = createDB()
   }
-  const { contract, timestamp } = tokenInfo
+  const { token, timestamp } = tokenInfo
   try {
     try {
-      await db.get(`${contract}:${timestamp}`)
+      await db.get(`${token}:${timestamp}`)
     } catch (error) {
       if (error) {
-        await db.put(`${contract}:${timestamp}`, JSON.stringify(tokenInfo))
+        await db.put(`${token}:${timestamp}`, JSON.stringify(tokenInfo))
       }
     }
   } catch (error) {
@@ -25,26 +25,26 @@ const putTokenInfo = async tokenInfo => {
   }
 }
 
-const getTokenInfo = async (contract, timestamp) => {
+const getTokenInfo = async (token, timestamp) => {
   if (!db) {
     db = createDB()
   }
   try {
-    return (await db.get(`${contract}:${timestamp}`)).toString('utf8')
+    return (await db.get(`${token}:${timestamp}`)).toString('utf8')
   } catch (error) {
     console.error(error)
   }
 }
 
-const getTokenInfoList = contract => {
+const getTokenInfoList = token => {
   let tokenInfoList = []
   return new Promise((resolve, reject) => {
     if (!db) {
       db = createDB()
     }
     db.createReadStream({
-      gte: `${contract}:`,
-      lte: `${contract}:~`,
+      gte: `${token}:`,
+      lte: `${token}:~`,
       reverse: true,
     })
       .on('data', data => {
@@ -59,4 +59,27 @@ const getTokenInfoList = contract => {
   })
 }
 
-module.exports = { putTokenInfo, getTokenInfo, getTokenInfoList }
+const getAllTokens = () => {
+  let tokenInfoList = []
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      db = createDB()
+    }
+    db.createReadStream({
+      gte: `&`,
+      lte: `~`,
+      reverse: true,
+    })
+      .on('data', data => {
+        tokenInfoList.push(JSON.parse(data.value.toString('utf8')))
+      })
+      .on('error', error => {
+        reject(error)
+      })
+      .on('end', () => {
+        resolve(tokenInfoList)
+      })
+  })
+}
+
+module.exports = { putTokenInfo, getTokenInfo, getTokenInfoList, getAllTokens }

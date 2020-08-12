@@ -1,13 +1,13 @@
 const { getTokenInfoList } = require('../database')
 
-const getHistory = async contract => {
-  const tokenInfoList = await getTokenInfoList(contract)
+const getHistory = async token => {
+  const tokenInfoList = await getTokenInfoList(token)
   return tokenInfoList ? tokenInfoList : []
 }
 
 const history = async ctx => {
-  const contract = ctx.path.substring(ctx.path.lastIndexOf('/') + 1)
-  ctx.body = await getHistory(contract)
+  const token = ctx.path.substring(ctx.path.lastIndexOf('/') + 1)
+  ctx.body = await getHistory(token)
 }
 
 module.exports = history
