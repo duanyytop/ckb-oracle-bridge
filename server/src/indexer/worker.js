@@ -1,10 +1,11 @@
 require('dotenv/config')
 const { Indexer, TransactionCollector } = require('@ckb-lumos/indexer')
-const { uintHexToInt, getTokenByContract } = require('../utils')
+const { Reporter } = require('open-oracle-reporter')
+const WebSocket = require('ws')
 const { putTokenInfo } = require('../database')
-const { ckb, ARGS } = require('../utils/config')
+const { ARGS, CKB_NODE_URL, CKB_WEBSOCKET_URL } = require('../utils/config')
 
-const indexer = new Indexer('http://127.0.0.1:8114', './indexed-data')
+const indexer = new Indexer(CKB_NODE_URL, './indexed-data')
 indexer.startForever()
 
 const collectTransactions = async ({ codeHash, hashType, args }) => {
@@ -30,49 +31,28 @@ const lockScript = () => {
   }
 }
 
-const SENDER_INDEX = 128
 const parseTokenInfo = async data => {
-  const block = await ckb.rpc.getBlock(transaction.tx_status.block_hash)
-  const dataHex = data.startsWith('0x') ? data.substring(2) : data
-  const sender = dataHex.substring(SENDER_INDEX, SENDER_INDEX + 40)
-  const txHash = dataHex.substring(SENDER_INDEX + 40, SENDER_INDEX + 104)
-  const nonce = uintHexToInt(dataHex.substring(SENDER_INDEX + 104, SENDER_INDEX + 120))
-  const gasPrice = uintHexToInt(dataHex.substring(SENDER_INDEX + 120, SENDER_INDEX + 136))
-  const gasLimit = uintHexToInt(dataHex.substring(SENDER_INDEX + 136, SENDER_INDEX + 152))
-  const amount = uintHexToInt(dataHex.substring(SENDER_INDEX + 152, SENDER_INDEX + 168))
-  const payload = dataHex.substring(SENDER_INDEX + 168)
-  const contract = payload.substring(160, 200)
-  const timestamp = uintHexToInt(payload.substring(264, 328))
-  const price = uintHexToInt(payload.substring(328))
-
-  return {
-    contract,
-    token: getTokenByContract(contract),
-    price,
-    timestamp,
-    source: {
-      sender,
-      tx_hash: txHash,
-      nonce,
-      gas_price: gasPrice,
-      gas_limit: gasLimit,
-      amount,
+  const decoded = Reporter.decode('prices', data)
+  if (decoded && decoded.length > 0) {
+    const { timestamp, token, price } = decoded[0]
+    return {
+      token,
+      price,
       timestamp,
-    },
-    destination: {
-      tx_hash: transaction.transaction.hash,
-      block_number: block.header.number,
-      timestamp: block.header.timestamp,
-    },
+      destination: {
+        tx_hash: transaction.transaction.hash,
+        block_number: block.header.number,
+        timestamp: block.header.timestamp,
+      },
+    }
   }
 }
 
-const parseAndStoreOracleData = async () => {
+const parseAndStoreOracleData = async tipNumber => {
   const blockNumber = (await indexer.tip()).block_number
-  const tipNumber = await ckb.rpc.getTipBlockNumber()
   if (blockNumber !== tipNumber) {
     setTimeout(async () => {
-      await parseAndStoreOracleData()
+      await parseAndStoreOracleData(tipNumber)
     }, 1000)
   } else {
     const transactions = await collectTransactions(lockScript())
@@ -84,17 +64,28 @@ const parseAndStoreOracleData = async () => {
       }
     }
   }
+  
 }
 
-const runCkbOracle = async () => {
-  setInterval(async () => {
-    await parseAndStoreOracleData()
-  }, 1000)
+const subscribeTipBlock = callback => {
+  const ws = new WebSocket(CKB_WEBSOCKET_URL)
+
+  ws.on('open', function open() {
+    ws.send(`{"id": 2, "jsonrpc": "2.0", "method": "subscribe", "params": ["new_tip_header"]}`)
+  })
+
+  ws.on('message', function incoming(data) {
+    if (JSON.parse(data).params) {
+      callback(JSON.parse(JSON.parse(data).params.result).number)
+    }
+  })
 }
 
 process.on('message', async msg => {
   const { start } = msg
   if (start) {
-    await runCkbOracle()
+    subscribeTipBlock( async tipNumber => {
+      await parseAndStoreOracleData(tipNumber)
+    })
   }
 })

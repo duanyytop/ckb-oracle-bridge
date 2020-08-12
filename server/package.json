@@ -16,7 +16,9 @@
     "koa-router": "^9.1.0",
     "leveldown": "^5.6.0",
     "levelup": "^4.4.0",
-    "node": "^14.5.0"
+    "node": "^14.5.0",
+    "open-oracle-reporter": "^1.0.2",
+    "ws": "^7.3.1"
   },
   "scripts": {
     "start": "node index.js",
