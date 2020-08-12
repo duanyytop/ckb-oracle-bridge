@@ -59,8 +59,8 @@ const getTokenInfoList = token => {
   })
 }
 
-const getAllTokens = () => {
-  let tokenInfoList = []
+const getAllTokensInfo = () => {
+  let allTokens = []
   return new Promise((resolve, reject) => {
     if (!db) {
       db = createDB()
@@ -71,15 +71,15 @@ const getAllTokens = () => {
       reverse: true,
     })
       .on('data', data => {
-        tokenInfoList.push(JSON.parse(data.value.toString('utf8')))
+        allTokens.push(JSON.parse(data.value.toString('utf8')))
       })
       .on('error', error => {
         reject(error)
       })
       .on('end', () => {
-        resolve(tokenInfoList)
+        resolve(allTokens)
       })
   })
 }
 
-module.exports = { putTokenInfo, getTokenInfo, getTokenInfoList, getAllTokens }
+module.exports = { putTokenInfo, getTokenInfo, getTokenInfoList, getAllTokensInfo }

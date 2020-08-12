@@ -1,7 +1,7 @@
-const { getAllTokens } = require('../database')
+const { getAllTokensInfo } = require('../database')
 
 const getList = async () => {
-  const allTokens = await getAllTokens()
+  const allTokens = await getAllTokensInfo()
   return allTokens ? allTokens : []
 }
 

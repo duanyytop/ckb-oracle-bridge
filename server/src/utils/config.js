@@ -1,7 +1,7 @@
 require('dotenv/config')
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
 
-const CKB_NODE_URL = process.env.CKB_NODE_URL || 'http://127.0.0.1:8114'
+const CKB_NODE_URL = process.env.CKB_NODE_URL || 'http://localhost:8114'
 const ckb = new CKB(CKB_NODE_URL)
 
 const CKB_WEBSOCKET_URL = process.env.CKB_WEBSOCKET_URL || 'ws://localhost:28114'
