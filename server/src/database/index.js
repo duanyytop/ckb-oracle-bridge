@@ -2,35 +2,28 @@ const levelup = require('levelup')
 const leveldown = require('leveldown')
 
 let db = null
-
-const createDB = () => {
-  return levelup(leveldown('./token-info-db'))
+const getDB = () => {
+  if (!db || db.isClosed()) {
+    db = levelup(leveldown('./token-info-db'))
+  }
+  return db
 }
 
 const putTokenInfo = async tokenInfo => {
-  if (!db) {
-    db = createDB()
-  }
   const { token, timestamp } = tokenInfo
+  if (await getTokenInfo()) {
+    return
+  }
   try {
-    try {
-      await db.get(`${token}:${timestamp}`)
-    } catch (error) {
-      if (error) {
-        await db.put(`${token}:${timestamp}`, JSON.stringify(tokenInfo))
-      }
-    }
+    await getDB().put(`${token}:${timestamp}`, JSON.stringify(tokenInfo))
   } catch (error) {
     console.error(error)
-  }
+  } 
 }
 
 const getTokenInfo = async (token, timestamp) => {
-  if (!db) {
-    db = createDB()
-  }
   try {
-    return (await db.get(`${token}:${timestamp}`)).toString('utf8')
+    return (await getDB().get(`${token}:${timestamp}`)).toString('utf8')
   } catch (error) {
     console.error(error)
   }
@@ -39,21 +32,20 @@ const getTokenInfo = async (token, timestamp) => {
 const getTokenInfoList = token => {
   let tokenInfoList = []
   return new Promise((resolve, reject) => {
-    if (!db) {
-      db = createDB()
-    }
-    db.createReadStream({
-      gte: `${token}:`,
-      lte: `${token}:~`,
-      reverse: true,
-    })
+    getDB()
+      .createReadStream({
+        gte: `${token}:`,
+        lte: `${token}:~`,
+        reverse: true,
+      })
       .on('data', data => {
         tokenInfoList.push(JSON.parse(data.value.toString('utf8')))
       })
       .on('error', error => {
         reject(error)
       })
-      .on('end', () => {
+      .on('end', async () => {
+        console.log(JSON.stringify(tokenInfoList))
         resolve(tokenInfoList)
       })
   })
@@ -62,21 +54,20 @@ const getTokenInfoList = token => {
 const getAllTokensInfo = () => {
   let allTokens = []
   return new Promise((resolve, reject) => {
-    if (!db) {
-      db = createDB()
-    }
-    db.createReadStream({
-      gte: `&`,
-      lte: `~`,
-      reverse: true,
-    })
+    getDB()
+      .createReadStream({
+        gte: `&`,
+        lte: `~`,
+        reverse: true,
+      })
       .on('data', data => {
         allTokens.push(JSON.parse(data.value.toString('utf8')))
       })
       .on('error', error => {
         reject(error)
       })
-      .on('end', () => {
+      .on('end', async () => {
+        console.log(JSON.stringify(allTokens))
         resolve(allTokens)
       })
   })

@@ -1,9 +1,4 @@
-const { getTokenInfo } = require('../database')
-
-const getDetail = async (token, timestamp) => {
-  const tokenInfo = await getTokenInfo(token, timestamp)
-  return tokenInfo ? tokenInfo : {}
-}
+const { getDetail } = require('./process')
 
 const detail = async ctx => {
   const token = ctx.path.substring(ctx.path.lastIndexOf('/') + 1)

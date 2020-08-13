@@ -2,10 +2,10 @@ require('dotenv/config')
 const { Indexer, TransactionCollector } = require('@ckb-lumos/indexer')
 const { Reporter } = require('open-oracle-reporter')
 const WebSocket = require('ws')
-const { putTokenInfo } = require('../database')
+const { putTokenInfo, getAllTokensInfo, getTokenInfo, getTokenInfoList } = require('../database')
 const { ckb, ARGS, CKB_NODE_URL, CKB_WEBSOCKET_URL } = require('../utils/config')
 
-const indexer = new Indexer(CKB_NODE_URL, './indexed-data')
+const indexer = new Indexer(CKB_NODE_URL, './src/indexed-data')
 indexer.startForever()
 
 let lastBlock = 0
@@ -19,7 +19,6 @@ const lockScript = () => {
 }
 
 const collectTransactions = async ({ codeHash, hashType, args, fromBlock = 0 }) => {
-  console.log('fromBlock', fromBlock)
   const collector = new TransactionCollector(indexer, {
     lock: {
       code_hash: codeHash,
@@ -39,11 +38,11 @@ const parseTokenInfo = async (transaction, data) => {
   const block = await ckb.rpc.getBlock(transaction.tx_status.block_hash)
   const decoded = Reporter.decode('prices', [data])
   if (decoded && decoded.length > 0) {
-    const { timestamp, token, price } = decoded[0]
+    const arr = decoded[0]
     return {
-      token,
-      price,
-      timestamp,
+      timestamp: arr[0],
+      token: arr[1],
+      price: arr[2],
       destination: {
         tx_hash: transaction.transaction.hash,
         block_number: block.header.number,
@@ -66,12 +65,10 @@ const parseAndStoreOracleData = async tipNumber => {
       for (let data of transaction.transaction.outputs_data) {
         if (data === '0x') break
         const tokenInfo = await parseTokenInfo(transaction, data)
-        console.info(JSON.stringify(tokenInfo))
         await putTokenInfo(tokenInfo)
       }
     }
   }
-  
 }
 
 const subscribeTipBlock = callback => {
@@ -88,10 +85,22 @@ const subscribeTipBlock = callback => {
 }
 
 process.on('message', async msg => {
-  const { start } = msg
-  if (start) {
-    subscribeTipBlock( async tipNumber => {
-      await parseAndStoreOracleData(tipNumber)
-    })
+  const { action, params } = msg
+  switch (action) {
+    case 'start':
+      subscribeTipBlock(async tipNumber => {
+        await parseAndStoreOracleData(tipNumber)
+      })
+      break
+    case 'detail':
+      process.send(await getTokenInfo(params.token, params.timestamp))
+      break
+    case 'list':
+      process.send(await getAllTokensInfo())
+      break
+    case 'history':
+      process.send(await getTokenInfoList(params.token))
+      break
   }
+  
 })

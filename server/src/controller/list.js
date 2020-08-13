@@ -1,9 +1,4 @@
-const { getAllTokensInfo } = require('../database')
-
-const getList = async () => {
-  const allTokens = await getAllTokensInfo()
-  return allTokens ? allTokens : []
-}
+const { getList } = require('./process')
 
 const list = async ctx => {
   ctx.body = await getList()

@@ -10,7 +10,7 @@
   },
   "homepage": "https://github.com/duanyytop/ckb-oracle-bridge#readme",
   "dependencies": {
-    "@ckb-lumos/indexer": "^0.7.4",
+    "@ckb-lumos/indexer": "^0.8.0",
     "@nervosnetwork/ckb-sdk-core": "^0.33.0",
     "koa": "^2.13.0",
     "koa-router": "^9.1.0",
