@@ -12,7 +12,7 @@ const getDB = () => {
 const putTokenInfo = async tokenInfo => {
   const { token, timestamp } = tokenInfo
   if (!token || !timestamp) {
-    return 
+    throw new Error('Database error: Token or timestamp is undefined')
   }
   if (await getTokenInfo()) {
     return
@@ -25,6 +25,9 @@ const putTokenInfo = async tokenInfo => {
 }
 
 const getTokenInfo = async (token, timestamp) => {
+  if (!token || !timestamp) {
+    return null
+  }
   try {
     return (await getDB().get(`${token}:${timestamp}`)).toString('utf8')
   } catch (error) {
@@ -33,6 +36,9 @@ const getTokenInfo = async (token, timestamp) => {
 }
 
 const getTokenInfoList = token => {
+  if (!token) {
+    throw []
+  }
   let tokenInfoList = []
   return new Promise((resolve, reject) => {
     getDB()
