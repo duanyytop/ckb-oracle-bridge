@@ -11,6 +11,9 @@ const getDB = () => {
 
 const putTokenInfo = async tokenInfo => {
   const { token, timestamp } = tokenInfo
+  if (!token || !timestamp) {
+    return 
+  }
   if (await getTokenInfo()) {
     return
   }
