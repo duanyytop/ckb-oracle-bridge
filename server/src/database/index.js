@@ -1,5 +1,6 @@
 const levelup = require('levelup')
 const leveldown = require('leveldown')
+const { latestToken } = require('../utils/utils')
 
 let db = null
 const getDB = () => {
@@ -21,7 +22,7 @@ const putTokenInfo = async tokenInfo => {
     await getDB().put(`${token}:${timestamp}`, JSON.stringify(tokenInfo))
   } catch (error) {
     console.error(error)
-  } 
+  }
 }
 
 const getTokenInfo = async (token, timestamp) => {
@@ -35,7 +36,7 @@ const getTokenInfo = async (token, timestamp) => {
   }
 }
 
-const getTokenInfoList = token => {
+const getListWithToken = token => {
   if (!token) {
     throw []
   }
@@ -54,32 +55,21 @@ const getTokenInfoList = token => {
         reject(error)
       })
       .on('end', async () => {
-        console.log(JSON.stringify(tokenInfoList))
         resolve(tokenInfoList)
       })
   })
 }
 
-const getAllTokensInfo = () => {
-  let allTokens = []
-  return new Promise((resolve, reject) => {
-    getDB()
-      .createReadStream({
-        gte: `&`,
-        lte: `~`,
-        reverse: true,
-      })
-      .on('data', data => {
-        allTokens.push(JSON.parse(data.value.toString('utf8')))
-      })
-      .on('error', error => {
-        reject(error)
-      })
-      .on('end', async () => {
-        console.log(JSON.stringify(allTokens))
-        resolve(allTokens)
-      })
-  })
+const TOKENS = ['btc', 'eth', 'ckb']
+const getAllTokens = async () => {
+  const tokenList = []
+  for await (const token of TOKENS) {
+    const tokenInfo = latestToken(await getListWithToken(token))
+    if (tokenInfo) {
+      tokenList.push(tokenInfo)
+    }
+  }
+  return tokenList
 }
 
-module.exports = { putTokenInfo, getTokenInfo, getTokenInfoList, getAllTokensInfo }
+module.exports = { putTokenInfo, getTokenInfo, getListWithToken, getAllTokens }

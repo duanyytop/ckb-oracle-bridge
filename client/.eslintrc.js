@@ -11,7 +11,7 @@ module.exports = {
     'prettier/prettier': [
       2,
       {
-        printWidth: 130,
+        printWidth: 140,
       },
     ],
     semi: [2, 'never'],
@@ -32,7 +32,7 @@ module.exports = {
     'max-len': [
       2,
       {
-        code: 120,
+        code: 140,
         ignoreComments: true,
         ignoreTrailingComments: true,
         ignoreUrls: true,

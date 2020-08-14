@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="list">
-      <div v-for="tokenInfo in tokenInfoList" :key="tokenInfo.token">
+      <div v-for="tokenInfo in tokenInfoList" :key="tokenInfo.token + tokenInfo.timestamp">
         <TokenPrice :tokenInfo="tokenInfo" />
       </div>
     </div>
@@ -10,7 +10,7 @@
 
 <script>
 import TokenPrice from '@/components/TokenPrice.vue'
-import { TokenInfoData } from '../mock/index'
+import { fetchAllTokenList } from '../service/index'
 
 export default {
   name: 'Home',
@@ -19,8 +19,11 @@ export default {
   },
   data: function() {
     return {
-      tokenInfoList: TokenInfoData,
+      tokenInfoList: [],
     }
+  },
+  mounted: function() {
+    fetchAllTokenList().then(res => (this.tokenInfoList = res))
   },
 }
 </script>

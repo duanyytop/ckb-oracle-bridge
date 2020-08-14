@@ -2,8 +2,9 @@ require('dotenv/config')
 const { Indexer, TransactionCollector } = require('@ckb-lumos/indexer')
 const { Reporter } = require('open-oracle-reporter')
 const WebSocket = require('ws')
-const { putTokenInfo, getAllTokensInfo, getTokenInfo, getTokenInfoList } = require('../database')
+const { putTokenInfo, getAllTokens, getTokenInfo, getListWithToken } = require('../database')
 const { ckb, ARGS, CKB_NODE_URL, CKB_WEBSOCKET_URL } = require('../utils/config')
+const { parsePrice } = require('../utils/utils')
 
 const indexer = new Indexer(CKB_NODE_URL, './src/indexed-data')
 indexer.startForever()
@@ -41,8 +42,10 @@ const parseTokenInfo = async (transaction, data) => {
     const arr = decoded[0]
     return {
       timestamp: arr[0],
-      token: arr[1],
-      price: arr[2],
+      token: arr[1].toLowerCase(),
+      price: parsePrice(arr[2]),
+      change: '--',
+      from: 'Coinbase',
       destination: {
         tx_hash: transaction.transaction.hash,
         block_number: block.header.number,
@@ -52,14 +55,14 @@ const parseTokenInfo = async (transaction, data) => {
   }
 }
 
-const parseAndStoreOracleData = async tipNumber => {
+const parseAndStoreTokenInfo = async tipNumber => {
   const blockNumber = (await indexer.tip()).block_number
   if (blockNumber !== tipNumber) {
     setTimeout(async () => {
-      await parseAndStoreOracleData(tipNumber)
+      await parseAndStoreTokenInfo(tipNumber)
     }, 1000)
   } else {
-    const transactions = await collectTransactions({...lockScript(), fromBlock: lastBlock})
+    const transactions = await collectTransactions({ ...lockScript(), fromBlock: lastBlock })
     lastBlock = blockNumber
     for (let transaction of transactions) {
       for (let data of transaction.transaction.outputs_data) {
@@ -78,8 +81,9 @@ const subscribeTipBlock = callback => {
   })
   ws.on('message', function incoming(data) {
     if (JSON.parse(data).params) {
-      console.info('New block')
-      callback(JSON.parse(JSON.parse(data).params.result).number)
+      const tipNumber = JSON.parse(JSON.parse(data).params.result).number
+      console.info('New Block', tipNumber)
+      callback(tipNumber)
     }
   })
 }
@@ -89,18 +93,17 @@ process.on('message', async msg => {
   switch (action) {
     case 'start':
       subscribeTipBlock(async tipNumber => {
-        await parseAndStoreOracleData(tipNumber)
+        await parseAndStoreTokenInfo(tipNumber)
       })
       break
     case 'detail':
       process.send(await getTokenInfo(params.token, params.timestamp))
       break
     case 'list':
-      process.send(await getAllTokensInfo())
+      process.send(await getAllTokens())
       break
     case 'history':
-      process.send(await getTokenInfoList(params.token))
+      process.send(await getListWithToken(params.token))
       break
   }
-  
 })

@@ -1,33 +1,42 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="tokenInfo.token">
     <div class="item" @click.prevent="handleClick()">
       <div class="left">
-        <img v-bind:src="require('../assets/' + tokenInfo.icon)" :alt="tokenInfo.token" />
+        <img v-bind:src="require('../assets/' + tokenInfo.token + '.png')" :alt="tokenInfo.token" />
         <div class="token">
-          <div>{{ tokenInfo.token }}</div>
+          <div>{{ parseToken() }}</div>
           <div>{{ tokenInfo.from }}</div>
         </div>
       </div>
       <div class="right">
         <div class="price">
           <div>{{ tokenInfo.price }}</div>
-          <div>{{ tokenInfo.timestamp }}</div>
+          <div>{{ parseDateTime() }}</div>
         </div>
         <div class="change">{{ tokenInfo.change }}</div>
       </div>
     </div>
     <div class="separator" />
   </div>
+  <div v-else>{{ tokenInfo }}</div>
 </template>
 
 <script>
+import { parseTime } from '../utils/index'
 export default {
   name: 'TokenPrice',
   props: ['tokenInfo'],
   methods: {
     handleClick: function() {
-      const token = this.tokenInfo.token.toLowerCase().replace('/', '-')
-      this.$router.push(`/history/${token}`)
+      this.$router.push(`/history/${this.tokenInfo.token}`)
+    },
+
+    parseToken: function() {
+      return `${this.tokenInfo.token.toUpperCase()}/USDT`
+    },
+
+    parseDateTime: function() {
+      return parseTime(this.tokenInfo.timestamp)
     },
   },
 }

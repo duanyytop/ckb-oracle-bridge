@@ -1,6 +1,7 @@
 let indexerWorker = null
 const initWorker = worker => {
   indexerWorker = worker
+  worker.setMaxListeners(Infinity)
   indexerWorker.send({ action: 'start' })
 }
 
@@ -24,7 +25,7 @@ const getDetail = (token, timestamp) => {
   })
 }
 
-const getHistory = (token) => {
+const getHistory = token => {
   indexerWorker.send({ action: 'history', params: { token } })
 
   return new Promise((resolve, _reject) => {
@@ -38,5 +39,5 @@ module.exports = {
   initWorker,
   getList,
   getDetail,
-  getHistory
+  getHistory,
 }

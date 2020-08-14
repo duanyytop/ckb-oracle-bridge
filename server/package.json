@@ -22,6 +22,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "generate": "node src/generator/index.js",
     "test": "jest"
   },
   "devDependencies": {

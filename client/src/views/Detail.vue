@@ -1,8 +1,8 @@
 <template>
   <div class="detail">
-    <div class="title">{{ parseToken(token) }}</div>
-    <div class="sub">Source</div>
-    <div v-for="item in detail.source" :key="'source' + item.label.trim()">
+    <div class="title">{{ parseToken() }}</div>
+    <div class="sub">Oracle</div>
+    <div v-for="item in detail.oracle" :key="'source' + item.label.trim()">
       <DetailItem :item="item" />
     </div>
     <div class="sub">Destination</div>
@@ -14,8 +14,8 @@
 
 <script>
 import DetailItem from '@/components/DetailItem.vue'
-import { TokenDetailData } from '../mock/index'
-import { parseTime, parseToUpperCase } from '../utils/index'
+import { parseTime, parseUpperToken } from '../utils/index'
+import { fetchTokenDetail } from '../service/index'
 
 export default {
   name: 'History',
@@ -32,51 +32,45 @@ export default {
     }
   },
   mounted: function() {
-    this.parseDetail()
+    fetchTokenDetail(this.token, this.timestamp).then(res => {
+      this.parseDetail(res)
+    })
   },
   methods: {
-    parseDetail: function() {
-      const { source, destination } = TokenDetailData
+    parseDetail: function(detail) {
+      const { token, price, timestamp, destination } = detail
       this.detail = {
-        source: [
+        oracle: [
           {
-            label: 'Tx Hash',
-            value: source.txHash,
-            link: this.ethTxLink(source.txHash),
+            label: 'Token',
+            value: parseUpperToken(this.token),
           },
           {
-            label: 'Sender',
-            value: source.sender,
-            link: this.ethAddressLink(source.sender),
+            label: 'Price',
+            value: price,
           },
           {
             label: 'Timestamp',
-            value: `${source.timestamp} (${parseTime(source.timestamp)})`,
+            value: `${timestamp} (${parseTime(timestamp)})`,
           },
         ],
         destination: [
           {
             label: 'Tx Hash',
-            value: destination.txHash,
-            link: this.ckbTxLink(destination.txHash),
+            value: destination.tx_hash,
+            link: this.ckbTxLink(destination.tx_hash),
           },
           {
             label: 'Block',
-            value: destination.block,
-            link: this.ckbBlockLink(destination.block),
+            value: parseInt(destination.block_number),
+            link: this.ckbBlockLink(parseInt(destination.block_number)),
           },
           {
             label: 'Timestamp',
-            value: `${destination.timestamp} (${parseTime(destination.timestamp)})`,
+            value: `${parseInt(destination.timestamp)} (${parseTime(destination.timestamp, false)})`,
           },
         ],
       }
-    },
-    ethTxLink: function(tx) {
-      return `https://etherscan.io/tx/${tx}`
-    },
-    ethAddressLink: function(address) {
-      return `https://etherscan.io/address/${address}`
     },
     ckbTxLink: function(tx) {
       return `https://explorer.nervos.org/transaction/${tx}`
@@ -85,7 +79,7 @@ export default {
       return `https://explorer.nervos.org/block/${block}`
     },
     parseToken: function() {
-      return parseToUpperCase(this.token)
+      return parseUpperToken(this.token)
     },
   },
 }

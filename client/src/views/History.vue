@@ -19,8 +19,8 @@
 
 <script>
 import HistoryPrice from '@/components/HistoryPrice.vue'
-import { HistoryPriceData } from '../mock/index'
-import { parseDate, parseToUpperCase } from '../utils/index'
+import { parseDate, parseUpperToken } from '../utils/index'
+import { fetchHistoryWithToken } from '../service/index'
 
 export default {
   name: 'History',
@@ -30,22 +30,31 @@ export default {
   },
   data: function() {
     return {
-      historyPriceList: HistoryPriceData,
+      historyPriceList: [],
       chartData: {
         columns: ['date', 'price'],
-        rows: HistoryPriceData.map(data => {
-          return {
-            date: parseDate(data.timestamp),
-            price: data.price,
-          }
-        }),
+        rows: [],
       },
     }
   },
   methods: {
     parseToken: function() {
-      return parseToUpperCase(this.token)
+      return parseUpperToken(this.token)
     },
+  },
+  mounted: function() {
+    fetchHistoryWithToken(this.token).then(res => {
+      this.historyPriceList = res
+      this.chartData = {
+        ...this.chartData,
+        rows: this.historyPriceList.map(data => {
+          return {
+            date: parseDate(data.timestamp),
+            price: data.price,
+          }
+        }),
+      }
+    })
   },
 }
 </script>
