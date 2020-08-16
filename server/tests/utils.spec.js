@@ -1,4 +1,4 @@
-const { parsePrice } = require('../src/utils/utils')
+const { parsePrice } = require('../src/utils')
 
 describe('Utils tests', () => {
   it('parsePrice', async () => {
