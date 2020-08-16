@@ -23,7 +23,8 @@
   "scripts": {
     "start": "node index.js",
     "generate": "node src/generator/index.js",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint src/**/*.js --fix"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",

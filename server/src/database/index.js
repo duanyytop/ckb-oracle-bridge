@@ -1,6 +1,6 @@
 const levelup = require('levelup')
 const leveldown = require('leveldown')
-const { latestToken } = require('../utils/utils')
+const { latestToken } = require('../utils')
 
 let db = null
 const getDB = () => {

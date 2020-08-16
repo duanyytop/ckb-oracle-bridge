@@ -2,7 +2,7 @@ const Koa = require('koa')
 const { fork } = require('child_process')
 const indexerWorker = fork(__dirname + '/src/indexer/worker.js')
 const router = require('./src/router')
-const { initWorker } = require('./src/controller/process')
+const { initWorker } = require('./src/process')
 
 initWorker(indexerWorker)
 

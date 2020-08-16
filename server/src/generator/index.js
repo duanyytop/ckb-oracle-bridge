@@ -2,9 +2,14 @@
  * The generator is an example which send ETH/USD contact and token information to Nervos CKB Aggron Testnet.
  */
 
-require('dotenv/config')
+const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const { Indexer, CellCollector } = require('@ckb-lumos/indexer')
-const { ckb, PRI_KEY, ARGS, ADDRESS, CKB_NODE_URL } = require('../utils/config')
+const { PRI_KEY, CKB_NODE_URL } = require('../utils/config')
+
+const ckb = new CKB(CKB_NODE_URL)
+const PUB_KEY = ckb.utils.privateKeyToPublicKey(PRI_KEY)
+const ARGS = '0x' + ckb.utils.blake160(PUB_KEY, 'hex')
+const ADDRESS = ckb.utils.pubkeyToAddress(PUB_KEY)
 
 const indexer = new Indexer(CKB_NODE_URL, './src/indexed-data')
 indexer.startForever()

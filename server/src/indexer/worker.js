@@ -1,10 +1,12 @@
-require('dotenv/config')
+const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const { Indexer, TransactionCollector } = require('@ckb-lumos/indexer')
 const { Reporter } = require('open-oracle-reporter')
 const WebSocket = require('ws')
-const { putTokenInfo, getAllTokens, getTokenInfo, getListWithToken } = require('../database')
-const { ckb, ARGS, CKB_NODE_URL, CKB_WEBSOCKET_URL } = require('../utils/config')
-const { parsePrice } = require('../utils/utils')
+const { PRI_KEY, CKB_NODE_URL, CKB_WEBSOCKET_URL } = require('../utils/config')
+const { parsePrice } = require('../utils')
+
+const ckb = new CKB(CKB_NODE_URL)
+const ARGS = '0x' + ckb.utils.blake160(ckb.utils.privateKeyToPublicKey(PRI_KEY), 'hex')
 
 const indexer = new Indexer(CKB_NODE_URL, './src/indexed-data')
 indexer.startForever()
@@ -68,7 +70,10 @@ const parseAndStoreTokenInfo = async tipNumber => {
       for (let data of transaction.transaction.outputs_data) {
         if (data === '0x') break
         const tokenInfo = await parseTokenInfo(transaction, data)
-        await putTokenInfo(tokenInfo)
+        process.send({
+          action: 'store',
+          message: JSON.stringify(tokenInfo),
+        })
       }
     }
   }
@@ -89,21 +94,10 @@ const subscribeTipBlock = callback => {
 }
 
 process.on('message', async msg => {
-  const { action, params } = msg
-  switch (action) {
-    case 'start':
-      subscribeTipBlock(async tipNumber => {
-        await parseAndStoreTokenInfo(tipNumber)
-      })
-      break
-    case 'detail':
-      process.send(await getTokenInfo(params.token, params.timestamp))
-      break
-    case 'list':
-      process.send(await getAllTokens())
-      break
-    case 'history':
-      process.send(await getListWithToken(params.token))
-      break
+  const { action } = msg
+  if (action === 'start') {
+    subscribeTipBlock(async tipNumber => {
+      await parseAndStoreTokenInfo(tipNumber)
+    })
   }
 })
