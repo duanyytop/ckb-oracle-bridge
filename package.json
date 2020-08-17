@@ -13,7 +13,7 @@
     "start:client": "cd client && yarn serve",
     "start:server": "cd server && yarn start",
     "build:client": "cd client && yarn build",
-    "lint": "cd client && yarn lint",
+    "lint": "cd client && yarn lint && cd ../server && yarn lint",
     "test": "cd client && yarn test && cd ../server && yarn test"
   },
   "devDependencies": {
