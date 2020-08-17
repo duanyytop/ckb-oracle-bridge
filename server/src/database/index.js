@@ -5,7 +5,7 @@ const { latestToken } = require('../utils')
 let db = null
 const getDB = () => {
 	if (!db || db.isClosed()) {
-		db = levelup(leveldown('./token-info-db'))
+		db = levelup(leveldown('./src/token-info-db'))
 	}
 	return db
 }
