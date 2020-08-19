@@ -1,5 +1,5 @@
-const COINBASE_ENDPOINT = 'https://api.pro.coinbase.com/oracle'
+const OKEX_ENDPOINT = 'https://aws.okex.com/api/market/v3/oracle'
 
 module.exports = {
-	COINBASE_ENDPOINT,
+	OKEX_ENDPOINT,
 }
