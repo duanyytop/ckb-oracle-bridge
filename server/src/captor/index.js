@@ -1,33 +1,18 @@
 const CKB = require('@nervosnetwork/ckb-sdk-core').default
-const { Indexer, TransactionCollector } = require('@ckb-lumos/indexer')
+const { TransactionCollector } = require('@ckb-lumos/indexer')
 const { Reporter } = require('open-oracle-reporter')
 const WebSocket = require('ws')
-const { PRI_KEY, CKB_NODE_URL, CKB_WEBSOCKET_URL } = require('../utils/config')
+const { indexer } = require('../indexer/index')
+const { CKB_NODE_URL, CKB_WEBSOCKET_URL } = require('../utils/config')
 const { parsePrice } = require('../utils')
+const CaptorLockScript = require('./captor')
 
 const ckb = new CKB(CKB_NODE_URL)
-const ARGS = '0x' + ckb.utils.blake160(ckb.utils.privateKeyToPublicKey(PRI_KEY), 'hex')
-
-const indexer = new Indexer(CKB_NODE_URL, './src/indexed-data')
-indexer.startForever()
 
 let lastBlock = 0
-
-const lockScript = () => {
-	return {
-		codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-		hashType: 'type',
-		args: ARGS,
-	}
-}
-
-const collectTransactions = async ({ codeHash, hashType, args, fromBlock = 0 }) => {
+const collectTransactions = async ({ fromBlock = 0 }) => {
 	const collector = new TransactionCollector(indexer, {
-		lock: {
-			code_hash: codeHash,
-			hash_type: hashType,
-			args,
-		},
+		lock: CaptorLockScript,
 		fromBlock,
 	})
 	const transactions = []
@@ -47,7 +32,7 @@ const parseTokenInfo = async (transaction, data) => {
 			token: arr[1].toLowerCase(),
 			price: parsePrice(arr[2]),
 			change: '--',
-			from: 'Coinbase',
+			from: 'OKEX',
 			destination: {
 				tx_hash: transaction.transaction.hash,
 				block_number: block.header.number,
@@ -64,7 +49,7 @@ const parseAndStoreTokenInfo = async tipNumber => {
 			await parseAndStoreTokenInfo(tipNumber)
 		}, 1000)
 	} else {
-		const transactions = await collectTransactions({ ...lockScript(), fromBlock: lastBlock })
+		const transactions = await collectTransactions({ fromBlock: lastBlock })
 		lastBlock = blockNumber
 		for (let transaction of transactions) {
 			for (let data of transaction.transaction.outputs_data) {
@@ -93,11 +78,7 @@ const subscribeTipBlock = callback => {
 	})
 }
 
-process.on('message', async msg => {
-	const { action } = msg
-	if (action === 'start') {
-		subscribeTipBlock(async tipNumber => {
-			await parseAndStoreTokenInfo(tipNumber)
-		})
-	}
-})
+module.exports = {
+	subscribeTipBlock,
+	parseAndStoreTokenInfo,
+}
