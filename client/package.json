@@ -1,5 +1,5 @@
 {
-  "name": "oracle",
+  "name": "ckb-oracle-bridge",
   "version": "0.1.0",
   "private": true,
   "scripts": {
