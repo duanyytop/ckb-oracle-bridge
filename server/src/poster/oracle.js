@@ -6,6 +6,7 @@ const { OKEX_API_KEY_ID, OKEX_API_SECRET, OKEX_API_PASSPHRASE } = require('../ut
 const fetchOpenOraclePayload = async () => {
 	const timestamp = Date.now() / 1000
 	const what = `${timestamp}GET/api/market/v3/oracle`
+	console.log(OKEX_API_SECRET)
 	const key = Buffer.from(OKEX_API_SECRET, 'base64')
 	const hmac = crypto.createHmac('sha256', key)
 	const signature = hmac.update(what).digest('base64')
@@ -16,8 +17,6 @@ const fetchOpenOraclePayload = async () => {
 		'CB-ACCESS-PASSPHRASE': OKEX_API_PASSPHRASE,
 		'Content-Type': 'application/json',
 	}
-
-	console.log(headers)
 
 	return await fetch(OKEX_ENDPOINT, {
 		headers: headers,
