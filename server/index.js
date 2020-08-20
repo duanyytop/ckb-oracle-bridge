@@ -1,9 +1,10 @@
+require('dotenv').config()
 const Koa = require('koa')
 const { fork } = require('child_process')
 const router = require('./src/router')
 const { responseConfig } = require('./src/middleware/index')
 const { initWorker } = require('./src/process')
-const indexerWorker = fork(__dirname + '/src/indexer/worker.js')
+const indexerWorker = fork(__dirname + '/src/process/worker.js')
 
 initWorker(indexerWorker)
 

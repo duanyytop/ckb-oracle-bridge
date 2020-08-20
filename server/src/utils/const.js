@@ -1,5 +1,5 @@
-const OKEX_ENDPOINT = 'https://aws.okex.com/api/market/v3/oracle'
+const OKEX_ENDPOINT = 'https://www.okex.com/api/market/v3/oracle'
 
 module.exports = {
-	OKEX_ENDPOINT,
+  OKEX_ENDPOINT,
 }
