@@ -1,23 +1,47 @@
-const { startIndexer, isIndexerTip } = require('../indexer/index')
-const { fetchOracleData, postOracleToCKB } = require('../poster/index')
-const { subscribeTipBlock, parseAndStoreTokenInfo } = require('../captor/index')
+const WebSocket = require('ws')
+const { CKB_WEBSOCKET_URL } = require('../utils/config')
+const { handleOracleData } = require('../captor/index')
+const { startIndexer, isIndexerTip } = require('../indexer')
+
+const subscribeTipBlock = callback => {
+  const ws = new WebSocket(CKB_WEBSOCKET_URL)
+
+  ws.on('open', function open() {
+    ws.send('{"id": 2, "jsonrpc": "2.0", "method": "subscribe", "params": ["new_tip_header"]}')
+  })
+
+  ws.on('message', function incoming(data) {
+    if (JSON.parse(data).params) {
+      const tipNumber = JSON.parse(JSON.parse(data).params.result).number
+      console.info('New Block', tipNumber)
+      callback(tipNumber)
+    }
+  })
+
+  ws.on('close', function close(code, reason) {
+    console.info('Websocket Close', code, reason)
+    subscribeTipBlock(callback)
+  })
+}
+
+const startOracle = async () => {
+  if (await isIndexerTip()) {
+    subscribeTipBlock(async tipNumber => {
+      await handleOracleData(tipNumber)
+    })
+  } else {
+    setTimeout(() => {
+      startOracle()
+    }, 2000)
+  }
+}
 
 process.on('message', async msg => {
   const { action } = msg
   if (action === 'start') {
-    // start ckb-lumos Indexer
     startIndexer()
-    setInterval(async () => {
-      if (await isIndexerTip()) {
-        // Fetch oracle data from open oracles
-        await fetchOracleData()
-        // Post oracle data to Nervos CKB
-        await postOracleToCKB()
-        // Parse and store oracle data from Nervos CKB block by block
-        subscribeTipBlock(async tipNumber => {
-          await parseAndStoreTokenInfo(tipNumber)
-        })
-      }
+    setTimeout(async () => {
+      await startOracle()
     }, 2000)
   }
 })

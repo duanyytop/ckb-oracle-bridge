@@ -1,6 +1,7 @@
 const levelup = require('levelup')
 const leveldown = require('leveldown')
 const { latestToken } = require('../utils')
+const { DATABASE_TOKENS } = require('../utils/const')
 
 let db = null
 const getDB = () => {
@@ -60,10 +61,9 @@ const getListWithToken = token => {
   })
 }
 
-const TOKENS = ['btc', 'eth', 'ckb']
 const getAllTokens = async () => {
   const tokenList = []
-  for await (const token of TOKENS) {
+  for await (const token of DATABASE_TOKENS) {
     const tokenInfo = latestToken(await getListWithToken(token))
     if (tokenInfo) {
       tokenList.push(tokenInfo)
