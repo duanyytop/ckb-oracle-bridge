@@ -4,7 +4,14 @@ const latestToken = tokenList => {
   if (!tokenList || tokenList.length === 0) return undefined
   let tokens = tokenList
   tokens.sort((a, b) => b.timestamp > a.timestamp)
-  return tokens[0]
+  const baseTime = Math.floor(parseInt(tokens[0].timestamp) / 86400) * 86400
+  const baseTokens = tokens.filter(token => Math.abs(parseInt(token.timestamp) - baseTime) <= 600) 
+  const basePrice = baseTokens.length > 0 ? parseFloat(baseTokens[0].price) : parseFloat(tokens[0].price)
+  const change = `${((parseFloat(tokens[0].price) - basePrice) / basePrice * 100).toFixed(2)}%`
+  return {
+    ...tokens[0],
+    change,
+  }
 }
 
 const parsePrice = price => {

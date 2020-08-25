@@ -10,7 +10,7 @@
       height="280px"
     ></ve-line>
     <div class="list">
-      <div v-for="historyPrice in historyPriceList" :key="historyPrice.price">
+      <div v-for="historyPrice in historyPriceList" :key="historyPrice.timestamp">
         <HistoryPrice :historyPrice="historyPrice" />
       </div>
     </div>
@@ -48,7 +48,7 @@ export default {
       this.chartData = {
         ...this.chartData,
         rows: res
-          .filter((_, index) => index % 10 === 0)
+          .filter((_, index) => index % 2 === 0)
           .map(data => {
             return {
               date: parseDate(data.timestamp),

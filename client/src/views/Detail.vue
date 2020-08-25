@@ -77,10 +77,10 @@ export default {
       }
     },
     ckbTxLink: function(tx) {
-      return `https://explorer.nervos.org/transaction/${tx}`
+      return `https://explorer.nervos.org/aggron/transaction/${tx}`
     },
     ckbBlockLink: function(block) {
-      return `https://explorer.nervos.org/block/${block}`
+      return `https://explorer.nervos.org/aggron/block/${block}`
     },
     parseToken: function() {
       return parseUpperToken(this.token)

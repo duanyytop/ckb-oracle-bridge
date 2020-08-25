@@ -13,7 +13,7 @@
           <div>{{ tokenInfo.price }}</div>
           <div>{{ parseDateTime() }}</div>
         </div>
-        <div class="change">{{ tokenInfo.change }}</div>
+        <div class="change" v-bind:class="{ negative: isNegative() }">{{ tokenInfo.change }}</div>
       </div>
     </div>
     <div class="separator" />
@@ -28,7 +28,7 @@ export default {
   props: ['tokenInfo'],
   methods: {
     handleClick: function() {
-      this.$router.push(`/history/${this.tokenInfo.token}`)
+      this.$router.push(`/history/${this.tokenInfo.token.toLowerCase()}`)
     },
 
     parseToken: function() {
@@ -37,6 +37,10 @@ export default {
 
     parseDateTime: function() {
       return parseTime(this.tokenInfo.timestamp)
+    },
+
+    isNegative: function() {
+      return this.tokenInfo.change.startsWith('-')
     },
   },
 }
@@ -65,10 +69,10 @@ export default {
 }
 
 .token {
-  margin-left: 12px;
+  margin-left: 8px;
 
   div:first-child {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
   }
 
@@ -81,7 +85,7 @@ export default {
 
 .price {
   div:first-child {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     text-align: left;
   }
@@ -98,16 +102,20 @@ export default {
 }
 
 .change {
-  margin-left: 12px;
-  font-size: 16px;
-  background: red;
+  margin-left: 6px;
+  font-size: 14px;
+  background: green;
   color: white;
   height: 30px;
   line-height: 30px;
   font-weight: 600;
-  min-width: 60px;
+  min-width: 65px;
   text-align: center;
   border-radius: 6px;
+}
+
+.negative {
+  background: red;
 }
 
 img {
