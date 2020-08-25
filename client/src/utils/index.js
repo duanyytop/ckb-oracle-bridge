@@ -4,10 +4,14 @@ const formatData = data => {
 
 const parseTime = (timestamp, isSecond = true) => {
   let date = null
-  if (timestamp.startsWith('0x')) {
-    date = new Date(parseInt(timestamp) * (isSecond ? 1000 : 1))
-  } else {
-    date = new Date(Number(timestamp) * (isSecond ? 1000 : 1))
+  if (typeof timestamp === 'number') {
+    date = new Date(timestamp * (isSecond ? 1000 : 1))
+  } else if (typeof timestamp === 'string') {
+    if (timestamp.startsWith('0x')) {
+      date = new Date(parseInt(timestamp) * (isSecond ? 1000 : 1))
+    } else {
+      date = new Date(Number(timestamp) * (isSecond ? 1000 : 1))
+    }
   }
   return `${date.getFullYear()}/${formatData(date.getMonth() + 1)}/${formatData(date.getDate())} ${formatData(
     date.getHours(),

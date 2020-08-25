@@ -4,7 +4,7 @@
       <router-link class="router" to="/">Home</router-link>
       <a class="source" href="https://github.com/duanyytop/ckb-oracle-bridge" target="_blank">GitHub</a>
     </div>
-    <router-view />
+    <router-view class="content" />
   </div>
 </template>
 
@@ -23,6 +23,10 @@
   padding: 0 16px;
   display: flex;
   justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 
   a {
     color: white;
@@ -38,5 +42,9 @@
     font-size: 16px;
     font-weight: 600;
   }
+}
+
+.content {
+  margin-top: 70px;
 }
 </style>

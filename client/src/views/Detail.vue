@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     parseDetail: function(detail) {
-      const { token, price, timestamp, destination } = detail
+      const { token, price, timestamp, destination, from } = detail
       this.detail = {
         oracle: [
           {
@@ -48,6 +48,10 @@ export default {
           {
             label: 'Price',
             value: price,
+          },
+          {
+            label: 'From',
+            value: from,
           },
           {
             label: 'Timestamp',
@@ -73,10 +77,10 @@ export default {
       }
     },
     ckbTxLink: function(tx) {
-      return `https://explorer.nervos.org/transaction/${tx}`
+      return `https://explorer.nervos.org/aggron/transaction/${tx}`
     },
     ckbBlockLink: function(block) {
-      return `https://explorer.nervos.org/block/${block}`
+      return `https://explorer.nervos.org/aggron/block/${block}`
     },
     parseToken: function() {
       return parseUpperToken(this.token)

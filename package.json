@@ -25,5 +25,7 @@
       "pre-commit": "yarn lint && yarn test"
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  }
 }
