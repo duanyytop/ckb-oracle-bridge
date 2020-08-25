@@ -2,7 +2,7 @@
   <div class="container" v-if="tokenInfo.token">
     <div class="item" @click.prevent="handleClick()">
       <div class="left">
-        <img v-bind:src="require('../assets/' + tokenInfo.token + '.png')" :alt="tokenInfo.token" />
+        <img v-bind:src="require('../assets/' + tokenInfo.token.toLowerCase() + '.png')" :alt="tokenInfo.token" />
         <div class="token">
           <div>{{ parseToken() }}</div>
           <div>{{ tokenInfo.from }}</div>
@@ -55,12 +55,12 @@ export default {
 
 .left {
   display: flex;
-  flex: 1.2;
+  flex: 1;
 }
 
 .right {
   display: flex;
-  flex: 1;
+  flex: 1.2;
   justify-content: space-between;
 }
 
@@ -90,6 +90,10 @@ export default {
     margin-top: 5px;
     font-size: 14px;
     text-align: left;
+
+    @media screen and (max-width: 750px) {
+      font-size: 12px;
+    }
   }
 }
 
@@ -101,7 +105,7 @@ export default {
   height: 30px;
   line-height: 30px;
   font-weight: 600;
-  min-width: 80px;
+  min-width: 60px;
   text-align: center;
   border-radius: 6px;
 }

@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     parseDetail: function(detail) {
-      const { token, price, timestamp, destination } = detail
+      const { token, price, timestamp, destination, from } = detail
       this.detail = {
         oracle: [
           {
@@ -48,6 +48,10 @@ export default {
           {
             label: 'Price',
             value: price,
+          },
+          {
+            label: 'From',
+            value: from,
           },
           {
             label: 'Timestamp',

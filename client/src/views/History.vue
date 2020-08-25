@@ -47,12 +47,15 @@ export default {
       this.historyPriceList = res
       this.chartData = {
         ...this.chartData,
-        rows: this.historyPriceList.map(data => {
-          return {
-            date: parseDate(data.timestamp),
-            price: data.price,
-          }
-        }),
+        rows: res
+          .filter((_, index) => index % 10 === 0)
+          .map(data => {
+            return {
+              date: parseDate(data.timestamp),
+              price: data.price,
+            }
+          })
+          .reverse(),
       }
     })
   },

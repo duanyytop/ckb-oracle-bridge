@@ -48,6 +48,10 @@ export default {
   div:last-child {
     font-size: 14px;
     color: black;
+
+    @media screen and (max-width: 750px) {
+      font-size: 12px;
+    }
   }
 }
 
