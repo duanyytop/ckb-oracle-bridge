@@ -12,4 +12,4 @@ const koa = new Koa()
 koa.use(responseConfig)
 koa.use(router.routes())
 
-koa.listen(40000)
+koa.listen(8000)
