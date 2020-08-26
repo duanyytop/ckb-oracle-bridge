@@ -64,7 +64,7 @@ export default {
   },
   mounted: function() {
     fetchHistoryWithToken(this.token).then(res => {
-      this.historyPriceList = res
+      this.historyPriceList = res.slice(0, 30)
       this.chartData = {
         ...this.chartData,
         columns: ['date', 'open', 'close', 'highest', 'lowest'],
