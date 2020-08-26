@@ -1,5 +1,9 @@
 # CKB Oracle Bridge
 
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/duanyytop/ckb-oracle-bridge/blob/master/LICENSE)
+[![Github Actions CI](https://github.com/duanyytop/ckb-oracle-bridge/workflows/CI/badge.svg?branch=master)](https://github.com/duanyytop/ckb-oracle-bridge/actions)
+[![Telegram Group](https://cdn.rawgit.com/Patrolavia/telegram-badge/8fe3382b/chat.svg)](https://t.me/nervos_ckb_dev)
+
 CKB Oracle Bridge is an oracle bridge fetching the oracle data of [Band Protocol](https://bandprotocol.com/) and [Open Oracle](https://github.com/compound-finance/open-oracle) from Nervos CKB and displaying oracle data with web pages.
 
 The Band Protocol oracle data of Nervos CKB is posted by [`ckb-band-oracle`](https://github.com/duanyytop/ckb-band-oracle) and the poster of Open Oracle is coming...
