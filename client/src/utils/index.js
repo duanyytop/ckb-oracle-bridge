@@ -20,7 +20,7 @@ const parseTime = (timestamp, isSecond = true) => {
 
 const parseDate = timestamp => {
   const date = new Date(Number(timestamp) * 1000)
-  return `${date.getFullYear()}/${formatData(date.getMonth() + 1)}/${formatData(date.getDate())}`
+  return `${formatData(date.getMonth() + 1)}/${formatData(date.getDate())} ${formatData(date.getHours())}:${formatData(date.getMinutes())}`
 }
 
 const parseUpperToken = token => {

@@ -61,7 +61,7 @@ module.exports = {
     'no-console': [
       'error',
       {
-        allow: ['error'],
+        allow: ['warn', 'error'],
       },
     ],
     'space-before-function-paren': [

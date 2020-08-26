@@ -1,9 +1,9 @@
 import Vue from 'vue'
-import VeLine from 'v-charts/lib/line.common'
+import VeCandle from 'v-charts/lib/candle.common'
 import App from './App.vue'
 import router from './router'
 
-Vue.component(VeLine.name, VeLine)
+Vue.component(VeCandle.name, VeCandle)
 
 Vue.config.productionTip = false
 
