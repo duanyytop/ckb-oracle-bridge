@@ -1,20 +1,26 @@
 # CKB Oracle Bridge
 
-CKB Oracle Bridge is an oracle bridge fetching crypto tokens' prices from [Coinbase Oracle](https://docs.pro.coinbase.com/#oracle) for Nervos CKB.
+CKB Oracle Bridge is an oracle bridge fetching the oracle data of [Band Protocol](https://bandprotocol.com/) and [Open Oracle](https://github.com/compound-finance/open-oracle) from Nervos CKB and displaying oracle data with web pages.
+
+The Band Protocol oracle data of Nervos CKB is posted by [`ckb-band-oracle`](https://github.com/duanyytop/ckb-band-oracle) and the poster of Open Oracle is coming...
 
 CKB Oracle Bridge includes two parts: server and client.
 
 ### Server
 
-Server is a web server to fetch Coinbase Oracle data from Nervos CKB, decode and store oracle data, and provide http api to Client.
+Server is a web server (Node.js) to fetch, decode and store the oracle data of Band Protocol and Open Oracle from Nervos CKB and provide http api to client.
+
+Before starting server, ckb node is needed whose websocket is enabled. Then ckb transactions containing oracle data are fetched, filtered and decoded from ckb node with [ckb-lumos](https://github.com/nervosnetwork/lumos) and http api is provided to client
 
 ### Client
 
-Client is a web application that renders oracle data which comes from Server.
+Client is a web application(Vue.js) rendering oracle data which comes from server part. Client includes three pages: latest price list page, token price history page and token detail page.
+
+![Oracle Snapshot](./snapshot/oracle.png)
 
 ### Prerequisites
 
-- CKB Node ([CKB websocket](https://github.com/nervosnetwork/ckb/wiki/RPC-subscription) is needed)
+- CKB Node ([CKB websocket](https://github.com/nervosnetwork/ckb/wiki/RPC-subscription) is enabled)
 - Node.js 12+
 
 ### Getting Started
@@ -25,6 +31,17 @@ $ cd ckb-oracle-bridge
 $ yarn bootstrap
 $ yarn start:server
 $ yarn start:client
+
+# build for client production
+$ yarn build:client
 ```
 
-> Note: Server need a while to indexer ckb oracle data and put it to database, so Client should wait a moment to start after starting Server.
+> Note: Server need a while to indexer ckb transactions which contain oracle data and put data to database, so client should wait a moment to start after server completing indexer.
+
+### Resource
+
+- [BandChain](https://github.com/bandprotocol/bandchain/tree/master/helpers) - A BandChain tool which help developers to fetch oracle data
+- [Open Oracle](https://github.com/compound-finance/open-oracle) - A standard and SDK allowing reporters to sign key-value pairs (e.g. a price feed) that interested users can post to the blockchain
+- [CKB JavaScript SDK](https://github.com/nervosnetwork/ckb-sdk-js) - JavaScript SDK of Nervos CKB which can help developers to interact ckb node
+- [CKB Lumos](https://github.com/nervosnetwork/lumos) - A full featured dapp framework for Nervos CKB
+- [CKB Explorer](https://explorer.nervos.org) - CKB blockchain explorer
