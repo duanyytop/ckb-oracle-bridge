@@ -48,6 +48,7 @@ const getListWithToken = token => {
         gte: `${token}:`,
         lte: `${token}:~`,
         reverse: true,
+        limit: 300,
       })
       .on('data', data => {
         tokenInfoList.push(JSON.parse(data.value.toString('utf8')))
