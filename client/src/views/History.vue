@@ -46,13 +46,13 @@ export default {
       let count = Math.ceil((maxHour - minHour) / 3600)
       let chartList = []
       for (let index = 0; index < count; index++) {
-        const firstTimestamp = minHour + index * 3600
+        const firstTimestamp = minHour + index * 3600 - 300
         const lastTimestamp = minHour + (index + 1) * 3600
         const sub = newList
           .filter(item => parseInt(item.timestamp) >= firstTimestamp && parseInt(item.timestamp) <= lastTimestamp)
           .map(item => item.price)
         chartList.push({
-          date: parseDate(firstTimestamp),
+          date: parseDate(firstTimestamp + 300),
           open: sub[0],
           close: sub[sub.length - 1],
           highest: Math.max(...sub),
