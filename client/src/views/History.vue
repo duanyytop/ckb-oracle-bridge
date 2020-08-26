@@ -4,7 +4,7 @@
     <ve-line
       :data="chartData"
       :legend-visible="false"
-      :grid="{ top: '10%', bottom: '10%' }"
+      :grid="{ top: '10%', bottom: '10%', left: '3%', right: '3%' }"
       :yAxis="{ scale: 'true' }"
       :colors="['#ff0000']"
       height="280px"
