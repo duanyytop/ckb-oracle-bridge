@@ -44,7 +44,7 @@ $ yarn build:client
 
 ### Resource
 
-- [BandChain](https://github.com/bandprotocol/bandchain/tree/master/helpers) - A BandChain tool which help developers to fetch oracle data
+- [Band Protocol](https://bandprotocol.com/) - A cross-chain data oracle platform that aggregates and connects real-world data and APIs to smart contracts
 - [Open Oracle](https://github.com/compound-finance/open-oracle) - A standard and SDK allowing reporters to sign key-value pairs (e.g. a price feed) that interested users can post to the blockchain
 - [CKB JavaScript SDK](https://github.com/nervosnetwork/ckb-sdk-js) - JavaScript SDK of Nervos CKB which can help developers to interact ckb node
 - [CKB Lumos](https://github.com/nervosnetwork/lumos) - A full featured dapp framework for Nervos CKB
