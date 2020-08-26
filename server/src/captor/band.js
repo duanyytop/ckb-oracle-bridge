@@ -32,7 +32,7 @@ const parseTokenInfo = async (transaction, data) => {
     token: BAND_TOKENS[index].toUpperCase(),
     price: parsePrice(price),
     change: '--',
-    from: 'BandChain',
+    from: 'Band Protocol',
     destination: {
       tx_hash: transaction.transaction.hash,
       block_number: block.header.number,
