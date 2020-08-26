@@ -5,6 +5,7 @@ const { startIndexer, isIndexerTip } = require('../indexer')
 
 const subscribeTipBlock = callback => {
   const ws = new WebSocket(CKB_WEBSOCKET_URL)
+  let latestTipNumber = ''
 
   ws.on('open', function open() {
     ws.send('{"id": 2, "jsonrpc": "2.0", "method": "subscribe", "params": ["new_tip_header"]}')
@@ -13,6 +14,7 @@ const subscribeTipBlock = callback => {
   ws.on('message', function incoming(data) {
     if (JSON.parse(data).params) {
       const tipNumber = JSON.parse(JSON.parse(data).params.result).number
+      latestTipNumber = tipNumber
       console.info('New Block', tipNumber)
       callback(tipNumber)
     }
@@ -20,6 +22,7 @@ const subscribeTipBlock = callback => {
 
   ws.on('close', function close(code, reason) {
     console.info('Websocket Close', code, reason)
+    callback(latestTipNumber)
     subscribeTipBlock(callback)
   })
 }

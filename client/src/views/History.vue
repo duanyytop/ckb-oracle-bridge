@@ -41,14 +41,18 @@ export default {
     },
     handleChartData: function(list) {
       const maxHour = Math.ceil(parseInt(list[0].timestamp) / 3600) * 3600
-      const minHour = Math.floor(parseInt(list[list.length - 1].timestamp) / 3600) * 3600
+      const minHour = Math.ceil(parseInt(list[list.length - 1].timestamp) / 3600) * 3600
       const newList = list.filter(item => parseInt(item.timestamp) >= minHour && parseInt(item.timestamp) <= maxHour).reverse()
-      let count = Math.floor((maxHour - minHour) / 3600)
+      let count = Math.ceil((maxHour - minHour) / 3600)
       let chartList = []
       for (let index = 0; index < count; index++) {
-        let sub = newList.slice(index, index + 12).map(item => item.price)
+        const firstTimestamp = minHour + index * 3600
+        const lastTimestamp = minHour + (index + 1) * 3600
+        const sub = newList
+          .filter(item => parseInt(item.timestamp) >= firstTimestamp && parseInt(item.timestamp) <= lastTimestamp)
+          .map(item => item.price)
         chartList.push({
-          date: parseDate(minHour + index * 3600),
+          date: parseDate(firstTimestamp),
           open: sub[0],
           close: sub[sub.length - 1],
           highest: Math.max(...sub),
