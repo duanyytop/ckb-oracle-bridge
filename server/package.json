@@ -23,7 +23,6 @@
   },
   "scripts": {
     "start": "node index.js",
-    "generate": "node src/generator/index.js",
     "test": "jest",
     "lint": "eslint src/**/*.js --fix"
   },
