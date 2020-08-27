@@ -33,6 +33,12 @@ Client is a web application(Vue.js) rendering oracle data which comes from serve
 $ git clone https://github.com/duanyytop/ckb-oracle-bridge
 $ cd ckb-oracle-bridge
 $ yarn bootstrap
+```
+
+Update `CKB_NODE_URL` and `CKB_WEBSOCKET_URL` for **server/.env** file which can be copied from server/.env.example
+Update `VUE_APP_SERVER_URL` with server url for **client/.env** file which can be copied from client/.env.example
+
+```shell
 $ yarn start:server
 $ yarn start:client
 
