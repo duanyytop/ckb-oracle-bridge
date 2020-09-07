@@ -29,8 +29,8 @@ const subscribeTipBlock = callback => {
 
 const startOracle = async () => {
   if (await isIndexerTip()) {
-    subscribeTipBlock(async tipNumber => {
-      await handleOracleData(tipNumber)
+    subscribeTipBlock(async () => {
+      await handleOracleData()
     })
   } else {
     setTimeout(() => {

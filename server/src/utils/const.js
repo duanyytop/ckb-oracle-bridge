@@ -16,6 +16,8 @@ const DATABASE_TOKENS = BAND_TOKENS.concat('CKB')
 
 const ORACLE_SOURCES = ['band', 'okex']
 
+const INDEXER_TX_COUNT = 50
+
 module.exports = {
   BAND_SYMBOL,
   OKEX_ORACLE_LOCK,
@@ -23,4 +25,5 @@ module.exports = {
   BAND_TOKENS,
   DATABASE_TOKENS,
   ORACLE_SOURCES,
+  INDEXER_TX_COUNT,
 }
