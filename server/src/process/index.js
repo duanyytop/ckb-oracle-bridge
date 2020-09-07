@@ -1,4 +1,4 @@
-const { putTokenInfo } = require('../database')
+const { putTokenInfoList } = require('../database')
 
 let indexerWorker = null
 const initWorker = worker => {
@@ -10,7 +10,7 @@ const initWorker = worker => {
   indexerWorker.on('message', async msg => {
     const { action, message } = msg
     if (action === 'store') {
-      await putTokenInfo(JSON.parse(message))
+      await putTokenInfoList(JSON.parse(message))
     }
   })
 }

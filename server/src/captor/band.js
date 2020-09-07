@@ -51,16 +51,18 @@ const handleBandOracle = async tipNumber => {
   } else {
     const transactions = await collectTransactions({ fromBlock: lastBlock })
     lastBlock = blockNumber
+    const tokenInfoList = []
     for (let transaction of transactions) {
       for (let data of transaction.transaction.outputs_data) {
         if (data === '0x') break
         const tokenInfo = await parseTokenInfo(transaction, data)
-        process.send({
-          action: 'store',
-          message: JSON.stringify(tokenInfo),
-        })
+        tokenInfoList.push(tokenInfo)
       }
     }
+    process.send({
+      action: 'store',
+      message: JSON.stringify(tokenInfoList),
+    })
   }
 }
 

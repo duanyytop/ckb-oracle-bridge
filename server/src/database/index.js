@@ -26,6 +26,25 @@ const putTokenInfo = async tokenInfo => {
   }
 }
 
+const putTokenInfoList = async tokenInfoList => {
+  if (!tokenInfoList) {
+    throw new Error('Database error: tokenInfoList is null or empty')
+  }
+  const ops = tokenInfoList.map(tokenInfo => {
+    const { source, token, timestamp } = tokenInfo
+    return {
+      type: 'put',
+      key: `${source}:${token}:${timestamp}`,
+      value: JSON.stringify(tokenInfo),
+    }
+  })
+  try {
+    await getDB().batch(ops)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getTokenInfo = async (source, token, timestamp) => {
   if (!source || !token || !timestamp) {
     return null
@@ -75,4 +94,4 @@ const getAllTokens = async () => {
   return tokenList
 }
 
-module.exports = { putTokenInfo, getTokenInfo, getListWithSourceAndToken, getAllTokens }
+module.exports = { putTokenInfo, putTokenInfoList, getTokenInfo, getListWithSourceAndToken, getAllTokens }
