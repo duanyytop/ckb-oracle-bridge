@@ -42,28 +42,21 @@ const parseTokenInfo = async (transaction, data) => {
   }
 }
 
-const handleBandOracle = async tipNumber => {
-  const blockNumber = (await indexer.tip()).block_number
-  if (blockNumber !== tipNumber) {
-    setTimeout(async () => {
-      await handleBandOracle(tipNumber)
-    }, 1000)
-  } else {
-    const transactions = await collectTransactions(latestFromNumber)
-    latestFromNumber = parseInt(latestFromNumber, 16)
-    const tokenInfoList = []
-    for (let transaction of transactions) {
-      for (let data of transaction.transaction.outputs_data) {
-        if (data === '0x') break
-        const tokenInfo = await parseTokenInfo(transaction, data)
-        tokenInfoList.push(tokenInfo)
-      }
+const handleBandOracle = async () => {
+  const transactions = await collectTransactions(latestFromNumber)
+  latestFromNumber = parseInt(latestFromNumber, 16)
+  const tokenInfoList = []
+  for (let transaction of transactions) {
+    for (let data of transaction.transaction.outputs_data) {
+      if (data === '0x') break
+      const tokenInfo = await parseTokenInfo(transaction, data)
+      tokenInfoList.push(tokenInfo)
     }
-    process.send({
-      action: 'store',
-      message: JSON.stringify(tokenInfoList.reverse()),
-    })
   }
+  process.send({
+    action: 'store',
+    message: JSON.stringify(tokenInfoList.reverse()),
+  })
 }
 
 module.exports = {
