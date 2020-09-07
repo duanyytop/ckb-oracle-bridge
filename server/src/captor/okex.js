@@ -58,7 +58,7 @@ const handleOkexOracle = async tipNumber => {
     const tokenInfoList = []
     for (let transaction of transactions) {
       for (let data of transaction.transaction.outputs_data) {
-        if (data === '0x') break
+        if (data === '0x') continue
         const tokenInfo = await parseTokenInfo(transaction, data)
         tokenInfoList.push(tokenInfo)
       }
