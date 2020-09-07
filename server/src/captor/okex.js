@@ -29,7 +29,6 @@ const parseTokenInfo = async (transaction, data) => {
   const decoded = Reporter.decode('prices', [data])
   if (decoded && decoded.length > 0) {
     const arr = decoded[0]
-    console.log(JSON.stringify(arr))
     return {
       timestamp: arr[0],
       token: arr[1].toUpperCase(),
