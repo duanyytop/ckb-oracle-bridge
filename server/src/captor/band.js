@@ -7,14 +7,15 @@ const { BAND_ORACLE_LOCK, BAND_TOKENS } = require('../utils/const')
 
 const ckb = new CKB(CKB_NODE_URL)
 
-const collectTransactions = async () => {
+let latestFromNumber = 0
+const collectTransactions = async (fromBlock = 0) => {
   const collector = new TransactionCollector(indexer, {
     lock: {
       code_hash: BAND_ORACLE_LOCK.codeHash,
       hash_type: BAND_ORACLE_LOCK.hashType,
       args: BAND_ORACLE_LOCK.args,
     },
-    fromBlock: 0,
+    fromBlock,
   })
   const transactions = []
   for await (const transaction of collector.collect()) {
@@ -48,7 +49,8 @@ const handleBandOracle = async tipNumber => {
       await handleBandOracle(tipNumber)
     }, 1000)
   } else {
-    const transactions = await collectTransactions()
+    const transactions = await collectTransactions(latestFromNumber)
+    latestFromNumber = parseInt(latestFromNumber, 16)
     const tokenInfoList = []
     for (let transaction of transactions) {
       for (let data of transaction.transaction.outputs_data) {

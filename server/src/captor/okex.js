@@ -8,14 +8,15 @@ const { OKEX_ORACLE_LOCK } = require('../utils/const')
 
 const ckb = new CKB(CKB_NODE_URL)
 
-const collectTransactions = async () => {
+let latestFromNumber = 0
+const collectTransactions = async (fromBlock = 0) => {
   const collector = new TransactionCollector(indexer, {
     lock: {
       code_hash: OKEX_ORACLE_LOCK.codeHash,
       hash_type: OKEX_ORACLE_LOCK.hashType,
       args: OKEX_ORACLE_LOCK.args,
     },
-    fromBlock: 0,
+    fromBlock,
   })
   const transactions = []
   for await (const transaction of collector.collect()) {
@@ -52,7 +53,8 @@ const handleOkexOracle = async tipNumber => {
       await handleOkexOracle(tipNumber)
     }, 1000)
   } else {
-    const transactions = await collectTransactions()
+    const transactions = await collectTransactions(latestFromNumber)
+    latestFromNumber = parseInt(blockNumber, 16)
     const tokenInfoList = []
     for (let transaction of transactions) {
       for (let data of transaction.transaction.outputs_data) {
