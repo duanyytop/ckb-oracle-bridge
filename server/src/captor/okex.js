@@ -8,15 +8,14 @@ const { OKEX_ORACLE_LOCK } = require('../utils/const')
 
 const ckb = new CKB(CKB_NODE_URL)
 
-let lastBlock = 0
-const collectTransactions = async ({ fromBlock = 0 }) => {
+const collectTransactions = async () => {
   const collector = new TransactionCollector(indexer, {
     lock: {
       code_hash: OKEX_ORACLE_LOCK.codeHash,
       hash_type: OKEX_ORACLE_LOCK.hashType,
       args: OKEX_ORACLE_LOCK.args,
     },
-    fromBlock,
+    fromBlock: 0,
   })
   const transactions = []
   for await (const transaction of collector.collect()) {
@@ -30,12 +29,14 @@ const parseTokenInfo = async (transaction, data) => {
   const decoded = Reporter.decode('prices', [data])
   if (decoded && decoded.length > 0) {
     const arr = decoded[0]
+    console.log(JSON.stringify(arr))
     return {
       timestamp: arr[0],
       token: arr[1].toUpperCase(),
       price: parsePrice(arr[2]),
       change: '--',
       from: 'OKEX',
+      source: 'okex',
       destination: {
         tx_hash: transaction.transaction.hash,
         block_number: block.header.number,
@@ -52,8 +53,7 @@ const handleOkexOracle = async tipNumber => {
       await handleOkexOracle(tipNumber)
     }, 1000)
   } else {
-    const transactions = await collectTransactions({ fromBlock: lastBlock })
-    lastBlock = blockNumber
+    const transactions = await collectTransactions()
     for (let transaction of transactions) {
       for (let data of transaction.transaction.outputs_data) {
         if (data === '0x') break

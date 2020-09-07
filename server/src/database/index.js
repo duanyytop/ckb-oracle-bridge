@@ -1,7 +1,7 @@
 const levelup = require('levelup')
 const leveldown = require('leveldown')
 const { latestToken } = require('../utils')
-const { DATABASE_TOKENS } = require('../utils/const')
+const { DATABASE_TOKENS, ORACLE_SOURCES } = require('../utils/const')
 
 let db = null
 const getDB = () => {
@@ -12,7 +12,7 @@ const getDB = () => {
 }
 
 const putTokenInfo = async tokenInfo => {
-  const { token, timestamp } = tokenInfo
+  const { token, timestamp, source } = tokenInfo
   if (!token || !timestamp) {
     throw new Error('Database error: Token or timestamp is undefined')
   }
@@ -20,24 +20,24 @@ const putTokenInfo = async tokenInfo => {
     return
   }
   try {
-    await getDB().put(`${token}:${timestamp}`, JSON.stringify(tokenInfo))
+    await getDB().put(`${source}:${token}:${timestamp}`, JSON.stringify(tokenInfo))
   } catch (error) {
     console.error(error)
   }
 }
 
-const getTokenInfo = async (token, timestamp) => {
-  if (!token || !timestamp) {
+const getTokenInfo = async (token, timestamp, source) => {
+  if (!token || !timestamp || !source) {
     return null
   }
   try {
-    return (await getDB().get(`${token}:${timestamp}`)).toString('utf8')
+    return (await getDB().get(`${source}:${token}:${timestamp}`)).toString('utf8')
   } catch (error) {
     console.error(error)
   }
 }
 
-const getListWithToken = token => {
+const getListWithSourceAndToken = (source, token) => {
   if (!token) {
     throw []
   }
@@ -45,8 +45,8 @@ const getListWithToken = token => {
   return new Promise((resolve, reject) => {
     getDB()
       .createReadStream({
-        gte: `${token}:`,
-        lte: `${token}:~`,
+        gte: `${source}:${token}:`,
+        lte: `${source}:${token}:~`,
         reverse: true,
         limit: 300,
       })
@@ -64,13 +64,15 @@ const getListWithToken = token => {
 
 const getAllTokens = async () => {
   const tokenList = []
-  for await (const token of DATABASE_TOKENS) {
-    const tokenInfo = latestToken(await getListWithToken(token))
-    if (tokenInfo) {
-      tokenList.push(tokenInfo)
+  for await (const source of ORACLE_SOURCES) {
+    for await (const token of DATABASE_TOKENS) {
+      const tokenInfo = latestToken(await getListWithSourceAndToken(source, token))
+      if (tokenInfo) {
+        tokenList.push(tokenInfo)
+      }
     }
   }
   return tokenList
 }
 
-module.exports = { putTokenInfo, getTokenInfo, getListWithToken, getAllTokens }
+module.exports = { putTokenInfo, getTokenInfo, getListWithSourceAndToken, getAllTokens }
