@@ -6,9 +6,9 @@
 
 [Live Demo](https://oracle-bridge.ckbapp.dev/)
 
-CKB Oracle Bridge is an oracle bridge fetching the oracle data of [Band Protocol](https://bandprotocol.com/) and [Open Oracle](https://github.com/compound-finance/open-oracle) from Nervos CKB and displaying oracle data with web pages.
+CKB Oracle Bridge is an oracle bridge fetching the oracle data of [Band Protocol](https://bandprotocol.com/) and [Open Oracle](https://github.com/compound-finance/open-oracle)(e.g. [Okex oracle](https://www.okex.com/docs/en/#oracle-oracle) and [Coinbase oracle](https://docs.pro.coinbase.com/#oracle)) from Nervos CKB and displaying oracle data with web pages.
 
-The Band Protocol oracle data of Nervos CKB is posted by [`ckb-band-oracle`](https://github.com/duanyytop/ckb-band-oracle) and the poster of Open Oracle is coming...
+The Band Protocol oracle data of Nervos CKB is posted by [`ckb-band-oracle`](https://github.com/duanyytop/ckb-band-oracle) and the Open Oracle data is poster by [`ckb-open-oracle`](https://github.com/duanyytop/ckb-open-oracle)(Okex Oracle has been supported).
 
 CKB Oracle Bridge includes two parts: server and client.
 
