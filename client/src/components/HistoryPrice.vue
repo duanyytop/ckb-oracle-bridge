@@ -16,7 +16,8 @@ export default {
   props: ['historyPrice'],
   methods: {
     handleClick: function() {
-      this.$router.push(`/detail/${this.historyPrice.token.toLowerCase()}/${this.historyPrice.timestamp}`)
+      const { token, timestamp, source } = this.historyPrice
+      this.$router.push(`/detail/${source}/${token.toLowerCase()}/${timestamp}`)
     },
     parseDateTime: function(timestamp) {
       return parseTime(timestamp)

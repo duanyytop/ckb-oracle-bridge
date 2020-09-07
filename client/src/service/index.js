@@ -13,12 +13,12 @@ const fetchAllTokenList = () => {
   return axiosIns.get('prices').then(res => res.data)
 }
 
-const fetchHistoryWithToken = token => {
-  return axiosIns.get(`history/${token}`).then(res => res.data)
+const fetchHistoryWithToken = (source, token) => {
+  return axiosIns.get(`history/${source}/${token}`).then(res => res.data)
 }
 
-const fetchTokenDetail = (token, timestamp) => {
-  return axiosIns.get(`prices/${token}/${timestamp}`).then(res => res.data)
+const fetchTokenDetail = (source, token, timestamp) => {
+  return axiosIns.get(`prices/${source}/${token}/${timestamp}`).then(res => res.data)
 }
 
 module.exports = {

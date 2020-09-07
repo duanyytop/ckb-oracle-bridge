@@ -22,7 +22,7 @@ export default {
   components: {
     DetailItem,
   },
-  props: ['token', 'timestamp'],
+  props: ['source', 'token', 'timestamp'],
   data: function() {
     return {
       detail: {
@@ -32,7 +32,7 @@ export default {
     }
   },
   mounted: function() {
-    fetchTokenDetail(this.token, this.timestamp).then(res => {
+    fetchTokenDetail(this.source, this.token, this.timestamp).then(res => {
       this.parseDetail(res)
     })
   },

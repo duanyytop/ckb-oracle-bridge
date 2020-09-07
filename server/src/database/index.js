@@ -12,7 +12,7 @@ const getDB = () => {
 }
 
 const putTokenInfo = async tokenInfo => {
-  const { token, timestamp, source } = tokenInfo
+  const { source, token, timestamp } = tokenInfo
   if (!token || !timestamp) {
     throw new Error('Database error: Token or timestamp is undefined')
   }
@@ -26,8 +26,8 @@ const putTokenInfo = async tokenInfo => {
   }
 }
 
-const getTokenInfo = async (token, timestamp, source) => {
-  if (!token || !timestamp || !source) {
+const getTokenInfo = async (source, token, timestamp) => {
+  if (!source || !token || !timestamp) {
     return null
   }
   try {

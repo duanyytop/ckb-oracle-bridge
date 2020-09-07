@@ -1,7 +1,13 @@
 <template>
   <div class="history">
     <div class="title">{{ parseToken(token) }}</div>
-    <ve-candle :data="chartData" :settings="chartSettings" :tooltip-visible="false" height="280px" with="90%" />
+    <ve-candle
+      :data="chartData"
+      :settings="chartSettings"
+      :tooltip-visible="false"
+      height="280px"
+      with="90%"
+    />
     <div class="list">
       <div v-for="historyPrice in historyPriceList" :key="historyPrice.timestamp">
         <HistoryPrice :historyPrice="historyPrice" />
@@ -17,7 +23,7 @@ import { fetchHistoryWithToken } from '../service/index'
 
 export default {
   name: 'History',
-  props: ['token'],
+  props: ['source', 'token'],
   components: {
     HistoryPrice,
   },
@@ -63,7 +69,7 @@ export default {
     },
   },
   mounted: function() {
-    fetchHistoryWithToken(this.token).then(res => {
+    fetchHistoryWithToken(this.source, this.token).then(res => {
       this.historyPriceList = res.slice(0, 30)
       this.chartData = {
         ...this.chartData,
