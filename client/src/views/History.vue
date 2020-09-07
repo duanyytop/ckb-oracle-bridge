@@ -1,13 +1,7 @@
 <template>
   <div class="history">
     <div class="title">{{ parseToken(token) }}</div>
-    <ve-candle
-      :data="chartData"
-      :settings="chartSettings"
-      :tooltip-visible="false"
-      height="280px"
-      with="90%"
-    />
+    <ve-candle :data="chartData" :settings="chartSettings" :tooltip-visible="false" height="280px" with="90%" />
     <div class="list">
       <div v-for="historyPrice in historyPriceList" :key="historyPrice.timestamp">
         <HistoryPrice :historyPrice="historyPrice" />
