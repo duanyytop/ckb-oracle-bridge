@@ -3,7 +3,7 @@ const { TransactionCollector } = require('@ckb-lumos/indexer')
 const { indexer } = require('../indexer/index')
 const { CKB_NODE_URL } = require('../utils/config')
 const { parseBandData, parsePrice } = require('../utils')
-const { BAND_ORACLE_LOCK, BAND_TOKENS } = require('../utils/const')
+const { BAND_ORACLE_LOCK, BAND_TOKENS, INDEXER_TX_COUNT } = require('../utils/const')
 
 const ckb = new CKB(CKB_NODE_URL)
 
@@ -21,7 +21,7 @@ const collectTransactions = async (fromBlock = 0) => {
   for await (const transaction of collector.collect()) {
     transactions.push(transaction)
   }
-  return transactions
+  return transactions.reverse().slice(0, INDEXER_TX_COUNT)
 }
 
 const parseTokenInfo = async (transaction, data) => {
@@ -42,28 +42,22 @@ const parseTokenInfo = async (transaction, data) => {
   }
 }
 
-const handleBandOracle = async tipNumber => {
+const handleBandOracle = async () => {
   const blockNumber = (await indexer.tip()).block_number
-  if (blockNumber !== tipNumber) {
-    setTimeout(async () => {
-      await handleBandOracle(tipNumber)
-    }, 1000)
-  } else {
-    const transactions = await collectTransactions(latestFromNumber)
-    latestFromNumber = parseInt(latestFromNumber, 16)
-    const tokenInfoList = []
-    for (let transaction of transactions) {
-      for (let data of transaction.transaction.outputs_data) {
-        if (data === '0x') continue
-        const tokenInfo = await parseTokenInfo(transaction, data)
-        tokenInfoList.push(tokenInfo)
-      }
+  const transactions = await collectTransactions(latestFromNumber)
+  latestFromNumber = parseInt(blockNumber, 16)
+  const tokenInfoList = []
+  for (let transaction of transactions) {
+    for (let data of transaction.transaction.outputs_data) {
+      if (data === '0x') continue
+      const tokenInfo = await parseTokenInfo(transaction, data)
+      tokenInfoList.push(tokenInfo)
     }
-    process.send({
-      action: 'store',
-      message: JSON.stringify(tokenInfoList.reverse()),
-    })
   }
+  process.send({
+    action: 'store',
+    message: JSON.stringify(tokenInfoList),
+  })
 }
 
 module.exports = {

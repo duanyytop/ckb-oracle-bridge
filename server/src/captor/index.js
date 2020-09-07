@@ -1,9 +1,9 @@
 const { handleBandOracle } = require('./band')
 const { handleOkexOracle } = require('./okex')
 
-const handleOracleData = async tipNumber => {
-  await handleBandOracle(tipNumber)
-  await handleOkexOracle(tipNumber)
+const handleOracleData = async () => {
+  await handleBandOracle()
+  await handleOkexOracle()
 }
 
 module.exports = {
