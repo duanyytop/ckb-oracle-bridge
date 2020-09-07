@@ -64,8 +64,8 @@ const getListWithSourceAndToken = (source, token) => {
 
 const getAllTokens = async () => {
   const tokenList = []
-  for await (const source of ORACLE_SOURCES) {
-    for await (const token of DATABASE_TOKENS) {
+  for await (const token of DATABASE_TOKENS) {
+    for await (const source of ORACLE_SOURCES) {
       const tokenInfo = latestToken(await getListWithSourceAndToken(source, token))
       if (tokenInfo) {
         tokenList.push(tokenInfo)
