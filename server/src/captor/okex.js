@@ -34,7 +34,7 @@ const parseTokenInfo = async (transaction, data) => {
       token: arr[1].toUpperCase(),
       price: parsePrice(arr[2]),
       change: '--',
-      from: 'OKEX',
+      from: 'OKEX Oracle',
       source: 'okex',
       destination: {
         tx_hash: transaction.transaction.hash,
