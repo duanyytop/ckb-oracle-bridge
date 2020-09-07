@@ -65,7 +65,7 @@ const handleOkexOracle = async tipNumber => {
     }
     process.send({
       action: 'store',
-      message: JSON.stringify(tokenInfoList),
+      message: JSON.stringify(tokenInfoList.reverse()),
     })
   }
 }
