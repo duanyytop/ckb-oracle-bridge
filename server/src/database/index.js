@@ -67,7 +67,7 @@ const getListWithSourceAndToken = (source, token) => {
         gte: `${source}:${token}:`,
         lte: `${source}:${token}:~`,
         reverse: true,
-        limit: 300,
+        limit: 500,
       })
       .on('data', data => {
         tokenInfoList.push(JSON.parse(data.value.toString('utf8')))
