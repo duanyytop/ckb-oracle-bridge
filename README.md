@@ -37,8 +37,8 @@ $ cd ckb-oracle-bridge
 $ yarn bootstrap
 ```
 
-Update `CKB_NODE_URL` and `CKB_WEBSOCKET_URL` for **server/.env** file which can be copied from server/.env.example
-Update `VUE_APP_SERVER_URL` with server url for **client/.env** file which can be copied from client/.env.example
+Update `CKB_NODE_URL` and `CKB_WEBSOCKET_URL` for `server/.env` file which can be copied from `server/.env.example`
+Update `VUE_APP_SERVER_URL` with server url for `client/.env` file which can be copied from `client/.env.example`
 
 ```shell
 $ yarn start:server
