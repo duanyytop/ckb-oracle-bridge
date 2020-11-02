@@ -11,7 +11,7 @@ const BAND_ORACLE_LOCK = {
 }
 
 const BAND_SYMBOL = '62616e64' // Hex of "band"
-const BAND_TOKENS = ['BTC', 'ETH', 'DAI', 'REP', 'ZRX', 'BAT', 'KNC', 'LINK', 'COMP', 'BAND']
+const BAND_TOKENS = ['BTC', 'ETH', 'DAI', 'REP', 'ZRX', 'BAT', 'KNC', 'LINK', 'COMP', 'BAND', 'CKB']
 const DATABASE_TOKENS = BAND_TOKENS.concat('CKB')
 
 const ORACLE_SOURCES = ['band', 'okex']
