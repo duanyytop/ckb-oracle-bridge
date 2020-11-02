@@ -7,7 +7,7 @@ const OKEX_ORACLE_LOCK = {
 const BAND_ORACLE_LOCK = {
   codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
   hashType: 'type',
-  args: '0x010036c329ed630d6ce750712a477543672adab57f4c',
+  args: '0x6543b30b82dcf74670b4c26666157c4a095a26cb',
 }
 
 const BAND_SYMBOL = '62616e64' // Hex of "band"
