@@ -1,7 +1,7 @@
 const levelup = require('levelup')
 const leveldown = require('leveldown')
 const { latestToken } = require('../utils')
-const { DATABASE_TOKENS, ORACLE_SOURCES } = require('../utils/const')
+const { BAND_TOKENS, ORACLE_SOURCES } = require('../utils/const')
 
 let db = null
 const getDB = () => {
@@ -83,7 +83,7 @@ const getListWithSourceAndToken = (source, token) => {
 
 const getAllTokens = async () => {
   const tokenList = []
-  for await (const token of DATABASE_TOKENS) {
+  for await (const token of BAND_TOKENS) {
     for await (const source of ORACLE_SOURCES) {
       const tokenInfo = latestToken(await getListWithSourceAndToken(source, token))
       if (tokenInfo) {

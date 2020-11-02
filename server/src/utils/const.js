@@ -12,7 +12,6 @@ const BAND_ORACLE_LOCK = {
 
 const BAND_SYMBOL = '62616e64' // Hex of "band"
 const BAND_TOKENS = ['BTC', 'ETH', 'DAI', 'REP', 'ZRX', 'BAT', 'KNC', 'LINK', 'COMP', 'BAND', 'CKB']
-const DATABASE_TOKENS = BAND_TOKENS.concat('CKB')
 
 const ORACLE_SOURCES = ['band', 'okex']
 
@@ -23,7 +22,6 @@ module.exports = {
   OKEX_ORACLE_LOCK,
   BAND_ORACLE_LOCK,
   BAND_TOKENS,
-  DATABASE_TOKENS,
   ORACLE_SOURCES,
   INDEXER_TX_COUNT,
 }
