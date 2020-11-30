@@ -11,17 +11,22 @@ const BAND_ORACLE_LOCK = {
 }
 
 const BAND_SYMBOL = '62616e64' // Hex of "band"
-const BAND_TOKENS = ['BTC', 'ETH', 'DAI', 'REP', 'ZRX', 'BAT', 'KNC', 'LINK', 'COMP', 'BAND', 'CKB']
 
 const ORACLE_SOURCES = ['band', 'okex']
 
 const INDEXER_TX_COUNT = 50
 
+const BAND_CONFIG = {
+  ask_count: 16,
+  min_count: 10,
+  endpoint: 'http://guanyu-testnet3-query.bandchain.org',
+}
+
 module.exports = {
+  BAND_CONFIG,
   BAND_SYMBOL,
   OKEX_ORACLE_LOCK,
   BAND_ORACLE_LOCK,
-  BAND_TOKENS,
   ORACLE_SOURCES,
   INDEXER_TX_COUNT,
 }
