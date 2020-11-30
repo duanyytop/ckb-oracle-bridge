@@ -1,13 +1,27 @@
-const { BAND_SYMBOL } = require('./const')
+const { BAND_CONFIG, BAND_SYMBOL } = require('./const')
+
+const fetchSymbols = async () => {
+  let res = await fetch(
+    BAND_CONFIG.endpoint + `/oracle/price_symbols?ask_count=${BAND_CONFIG.ask_count}&min_count=${BAND_CONFIG.min_count}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  )
+  res = await res.json()
+  return res['result']
+}
 
 const latestToken = tokenList => {
   if (!tokenList || tokenList.length === 0) return undefined
   let tokens = tokenList
   tokens.sort((a, b) => b.timestamp > a.timestamp)
   const baseTime = Math.floor(parseInt(tokens[0].timestamp) / 86400) * 86400
-  const baseTokens = tokens.filter(token => Math.abs(parseInt(token.timestamp) - baseTime) <= 600) 
+  const baseTokens = tokens.filter(token => Math.abs(parseInt(token.timestamp) - baseTime) <= 600)
   const basePrice = baseTokens.length > 0 ? parseFloat(baseTokens[0].price) : parseFloat(tokens[0].price)
-  const change = `${((parseFloat(tokens[0].price) - basePrice) / basePrice * 100).toFixed(2)}%`
+  const change = `${(((parseFloat(tokens[0].price) - basePrice) / basePrice) * 100).toFixed(2)}%`
   return {
     ...tokens[0],
     change,
@@ -49,6 +63,7 @@ const parseBandData = data => {
 }
 
 module.exports = {
+  fetchSymbols,
   latestToken,
   parsePrice,
   remove0x,

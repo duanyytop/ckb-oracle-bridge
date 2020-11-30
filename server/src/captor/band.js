@@ -2,8 +2,8 @@ const CKB = require('@nervosnetwork/ckb-sdk-core').default
 const { TransactionCollector } = require('@ckb-lumos/indexer')
 const { indexer } = require('../indexer/index')
 const { CKB_NODE_URL } = require('../utils/config')
-const { parseBandData, parsePrice } = require('../utils')
-const { BAND_ORACLE_LOCK, BAND_TOKENS, INDEXER_TX_COUNT } = require('../utils/const')
+const { parseBandData, parsePrice, fetchSymbols } = require('../utils')
+const { BAND_ORACLE_LOCK, INDEXER_TX_COUNT } = require('../utils/const')
 
 const ckb = new CKB(CKB_NODE_URL)
 
@@ -26,10 +26,11 @@ const collectTransactions = async (fromBlock = 0) => {
 
 const parseTokenInfo = async (transaction, data) => {
   const block = await ckb.rpc.getBlock(transaction.tx_status.block_hash)
+  const symbols = await fetchSymbols()
   const { index, timestamp, price } = parseBandData(data)
   return {
     timestamp,
-    token: BAND_TOKENS[index].toUpperCase(),
+    token: symbols[index].toUpperCase(),
     price: parsePrice(price),
     change: '--',
     from: 'Band Protocol',
