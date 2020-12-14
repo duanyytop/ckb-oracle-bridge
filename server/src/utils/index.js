@@ -1,3 +1,4 @@
+const fetch = require('node-fetch')
 const { BAND_CONFIG, BAND_SYMBOL } = require('./const')
 
 const fetchSymbols = async () => {
