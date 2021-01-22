@@ -16,11 +16,11 @@ CKB Oracle Bridge includes two parts: server and client.
 
 Server is a web server (Node.js) to fetch, decode and store the oracle data of Band Protocol and Open Oracle from Nervos CKB and provide http api to client.
 
-Before starting server, ckb node is needed whose websocket is enabled. Then ckb transactions containing oracle data are fetched, filtered and decoded from ckb node with [ckb-lumos](https://github.com/nervosnetwork/lumos) and http api is provided to client
+Before starting server, ckb node is needed whose websocket is enabled. Then ckb transactions containing oracle data are fetched, filtered and decoded from ckb node with [ckb-lumos](https://github.com/nervosnetwork/lumos) and http api is provided to the client
 
 ### Client
 
-Client is a web application(Vue.js) rendering oracle data which comes from server part. Client includes three pages: latest price list page, token price history page and token detail page.
+Client is a web application(Vue.js) rendering oracle data which comes from the server part. Client includes three pages: latest price list page, token price history page and token detail page.
 
 ![Oracle Snapshot](./snapshot/oracle.png)
 
