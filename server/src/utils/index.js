@@ -33,6 +33,10 @@ const parsePrice = price => {
   return Number(price) / 10 ** 6
 }
 
+const parseBandPrice = price => {
+  return Number(price) / 10 ** 9
+}
+
 const remove0x = hex => {
   if (hex.startsWith('0x')) {
     return hex.substring(2)
@@ -67,6 +71,7 @@ module.exports = {
   fetchSymbols,
   latestToken,
   parsePrice,
+  parseBandPrice,
   remove0x,
   parseBandData,
 }

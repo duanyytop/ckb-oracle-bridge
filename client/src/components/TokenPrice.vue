@@ -2,7 +2,7 @@
   <div class="container" v-if="tokenInfo.token">
     <div class="item" @click.prevent="handleClick()">
       <div class="left">
-        <img v-bind:src="require('../assets/' + tokenInfo.token.toLowerCase() + '.png')" :alt="tokenInfo.token" />
+        <img v-bind:src="require('../assets/btc.png')" :alt="tokenInfo.token" />
         <div class="token">
           <div>{{ parseToken() }}</div>
           <div>{{ tokenInfo.from }}</div>
@@ -32,7 +32,7 @@ export default {
     },
 
     parseToken: function() {
-      return `${this.tokenInfo.token.toUpperCase()}/USDT`
+      return `${this.tokenInfo.token.toUpperCase()}/USD`
     },
 
     parseDateTime: function() {

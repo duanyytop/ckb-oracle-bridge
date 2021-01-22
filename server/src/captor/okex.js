@@ -4,12 +4,13 @@ const { Reporter } = require('open-oracle-reporter')
 const { indexer } = require('../indexer/index')
 const { CKB_NODE_URL } = require('../utils/config')
 const { parsePrice } = require('../utils')
-const { OKEX_ORACLE_LOCK, INDEXER_TX_COUNT } = require('../utils/const')
+const { OKEX_ORACLE_LOCK } = require('../utils/const')
 
 const ckb = new CKB(CKB_NODE_URL)
 
-let latestFromNumber = 0
-const collectTransactions = async (fromBlock = 0) => {
+const collectTransactions = async toBlock => {
+  let toBlockNumber = parseInt(toBlock, 16)
+  let fromBlock = toBlockNumber > 100 ? `0x${(toBlockNumber - 100).toString(16)}` : '0x0'
   const collector = new TransactionCollector(indexer, {
     lock: {
       code_hash: OKEX_ORACLE_LOCK.codeHash,
@@ -17,12 +18,15 @@ const collectTransactions = async (fromBlock = 0) => {
       args: OKEX_ORACLE_LOCK.args,
     },
     fromBlock,
+    toBlock,
+    order: 'desc',
   })
+  console.info(`Okex fromBlock: ${fromBlock} --- toBlock: ${toBlock}`)
   const transactions = []
   for await (const transaction of collector.collect()) {
     transactions.push(transaction)
   }
-  return transactions.reverse().slice(0, INDEXER_TX_COUNT)
+  return transactions
 }
 
 const parseTokenInfo = async (transaction, data) => {
@@ -48,8 +52,7 @@ const parseTokenInfo = async (transaction, data) => {
 
 const handleOkexOracle = async () => {
   const blockNumber = (await indexer.tip()).block_number
-  const transactions = await collectTransactions(latestFromNumber)
-  latestFromNumber = parseInt(blockNumber, 16)
+  const transactions = await collectTransactions(blockNumber)
   const tokenInfoList = []
   for (let transaction of transactions) {
     for (let data of transaction.transaction.outputs_data) {
@@ -58,6 +61,7 @@ const handleOkexOracle = async () => {
       tokenInfoList.push(tokenInfo)
     }
   }
+  console.log('store okex token info')
   process.send({
     action: 'store',
     message: JSON.stringify(tokenInfoList),
