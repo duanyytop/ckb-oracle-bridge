@@ -56,7 +56,7 @@ const handleBandOracle = async () => {
   const transactions = await collectTransactions(blockNumber)
   const tokenInfoList = []
   for (let transaction of transactions) {
-    let cellData = transaction.transaction.outputs_data.slice(0, 50)
+    let cellData = transaction.transaction.outputs_data.slice(0, 30)
     for (let data of cellData) {
       const tokenInfo = await parseTokenInfo(transaction, data)
       console.log(`tokenInfo: ${JSON.stringify(tokenInfo)}`)
